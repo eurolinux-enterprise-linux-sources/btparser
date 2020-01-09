@@ -1,6 +1,6 @@
 Name: btparser
-Version: 0.16
-Release: 3%{?dist}
+Version: 0.17
+Release: 1%{?dist}
 Summary: Parser and analyzer for backtraces produced by GDB
 Group: Development/Libraries
 License: GPLv2+
@@ -81,6 +81,10 @@ make check
 %{python_sitearch}/%{name}/*
 
 %changelog
+* Wed Aug 08 2012 Jiri Moskovcak <jmoskovc@redhat.com> - 0.17-1
+- New upstream release
+- Resolves: #846667
+
 * Mon May  7 2012 Karel Klíč <kklic@redhat.com> - 0.16-3
 - Report correct crash_function in the crash sumary
   Resolves: rhbz#811147
