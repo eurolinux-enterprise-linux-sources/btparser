@@ -1,12 +1,15 @@
 Name: btparser
 Version: 0.17
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary: Parser and analyzer for backtraces produced by GDB
 Group: Development/Libraries
 License: GPLv2+
 URL: http://fedorahosted.org/btparser
 Source0: https://fedorahosted.org/released/btparser/btparser-%{version}.tar.xz
 Patch0: btparser-rhbz#811147.patch
+Patch1: btparser-rhbz#803774.patch
+Patch2: btparser-rhbz#903140.patch
+Patch3: btparser-rhbz#905854.patch
 BuildRequires: python-devel
 # Autoconf is required by btparser-rhbz#811147.patch
 BuildRequires: autoconf
@@ -48,6 +51,9 @@ Python bindings for %{name}.
 %prep
 %setup -q
 %patch0 -p1 -b.811147
+%patch1 -p1 -b.803774
+%patch2 -p1 -b.903140
+%patch3 -p1 -b.905854
 
 %build
 %configure --disable-static
@@ -81,6 +87,12 @@ make check
 %{python_sitearch}/%{name}/*
 
 %changelog
+* Mon Jun 10 2013 Martin Milata <mmilata@redhat.com> - 0.17-2
+- Backport commit ec1bf395 that fixes several memory leaks
+- Backport abf036d5 that fixes a NULL dereference
+- Backport 6e0f49a3 that adds version to the manual page
+- Resolves: #803774, #903140, #905854
+
 * Wed Aug 08 2012 Jiri Moskovcak <jmoskovc@redhat.com> - 0.17-1
 - New upstream release
 - Resolves: #846667
