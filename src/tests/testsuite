@@ -1,5 +1,5 @@
 #! /bin/sh
-# Generated from local.at by GNU Autoconf 2.66.
+# Generated from local.at by GNU Autoconf 2.68.
 #
 # Copyright (C) 2009, 2010 Free Software Foundation, Inc.
 #
@@ -84,6 +84,7 @@ fi
 IFS=" ""	$as_nl"
 
 # Find who we are.  Look in the path if we contain no directory separator.
+as_myself=
 case $0 in #((
   *[\\/]* ) as_myself=$0 ;;
   *) as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
@@ -209,11 +210,18 @@ IFS=$as_save_IFS
   # We cannot yet assume a decent shell, so we have to provide a
 	# neutralization value for shells without unset; and this also
 	# works around shells that cannot unset nonexistent variables.
+	# Preserve -v and -x to the replacement shell.
 	BASH_ENV=/dev/null
 	ENV=/dev/null
 	(unset BASH_ENV) >/dev/null 2>&1 && unset BASH_ENV ENV
 	export CONFIG_SHELL
-	exec "$CONFIG_SHELL" "$as_myself" ${1+"$@"}
+	case $- in # ((((
+	  *v*x* | *x*v* ) as_opts=-vx ;;
+	  *v* ) as_opts=-v ;;
+	  *x* ) as_opts=-x ;;
+	  * ) as_opts= ;;
+	esac
+	exec "$CONFIG_SHELL" $as_opts "$as_myself" ${1+"$@"}
 fi
 
     if test x$as_have_required = xno; then :
@@ -580,8 +588,6 @@ at_change_dir=false
 at_color=no
 # List of the tested programs.
 at_tested=''
-# List of the all the test groups.
-at_groups_all=' 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41'
 # As many question marks as there are digits in the last test group number.
 # Used to normalize the test group numbers so that `ls' lists them in
 # numerical order.
@@ -614,9 +620,9 @@ at_help_all="1;utils.at:9;btp_strcmp0;;
 25;frame.at:218;btp_frame_skip_function_args;;
 26;frame.at:262;btp_frame_parse_function_call;;
 27;frame.at:367;btp_frame_parse_address_in_function;;
-28;frame.at:421;btp_frame_parse_file_location;;
-29;frame.at:483;btp_frame_parse_header;;
-30;frame.at:565;btp_frame_parse;;
+28;frame.at:423;btp_frame_parse_file_location;;
+29;frame.at:485;btp_frame_parse_header;;
+30;frame.at:576;btp_frame_parse;;
 31;thread.at:8;btp_thread_remove_frame;;
 32;thread.at:72;btp_thread_remove_frames_above;;
 33;thread.at:137;btp_thread_remove_frames_below_n;;
@@ -627,8 +633,36 @@ at_help_all="1;utils.at:9;btp_strcmp0;;
 38;backtrace.at:61;btp_backtrace_find_crash_thread;;
 39;backtrace.at:93;btp_backtrace_limit_frame_depth;;
 40;backtrace.at:130;btp_backtrace_quality_complex;;
-41;normalize.at:10;btp_normalize_thread_removes_zeroes;;
+41;normalize.at:44;btp_normalize_thread_removes_zeroes;;
+42;normalize.at:88;btp_normalize_paired_unknown_function_names;;
+43;metrics.at:43;metrics_all_one_thread_empty;;
+44;metrics.at:62;metrics_all_both_threads_empty;;
+45;metrics.at:81;metrics_all_both_starting_??_levendistance3_a;;
+46;metrics.at:100;metrics_all_both_starting_??_levendistance3_b;;
+47;metrics.at:119;metrics_levenshtein_random_??_levendistance0_a;;
+48;metrics.at:136;metrics_levenshtein_random_??_levendistance0_b;;
+49;metrics.at:153;metrics_levenshtein_random_??_distance1;;
+50;metrics.at:170;metrics_levenshtein_random_??_distance2_a;;
+51;metrics.at:187;metrics_levenshtein_random_??_distance2_b;;
+52;metrics.at:204;metrics_levenshtein_random_??_distance2_c;;
+53;metrics.at:221;metrics_levenshtein_trans_??_distance2_a;;
+54;metrics.at:238;metrics_levenshtein_trans_??_distance2_b;;
+55;metrics.at:255;metrics_levenshtein_swap_trans_distance2_a;;
+56;metrics.at:269;metrics_levenshtein_swap_notrans_distance3_a;;
+57;metrics.at:283;metrics_jaccard_random_??_distance0_a;;
+58;metrics.at:300;metrics_jaccard_random_??_distance23_a;;
+59;metrics.at:315;metrics_jaccard_random_??_distance35;;
+60;metrics.at:330;distances_basic_properties;;
+61;metrics.at:360;distances_threads_compare;;
+62;cluster.at:3;btp_distances_cluster_objects;;
+63;cluster.at:71;btp_dendrogram_cut;;
+64;sharedlib.at:8;btp_sharedlib_parse;;
+65;sharedlib.at:33;btp_sharedlib_count;;
+66;sharedlib.at:55;btp_sharedlib_append;;
+67;sharedlib.at:80;btp_sharedlib_find_address;;
 "
+# List of the all the test groups.
+at_groups_all=`$as_echo "$at_help_all" | sed 's/;.*//'`
 
 # at_fn_validate_ranges NAME...
 # -----------------------------
@@ -639,7 +673,7 @@ at_fn_validate_ranges ()
   for at_grp
   do
     eval at_value=\$$at_grp
-    if test $at_value -lt 1 || test $at_value -gt 41; then
+    if test $at_value -lt 1 || test $at_value -gt 67; then
       $as_echo "invalid test group: $at_value" >&2
       exit 1
     fi
@@ -664,8 +698,8 @@ do
   fi
 
   case $at_option in
-  *=*) at_optarg=`expr "x$at_option" : 'x[^=]*=\(.*\)'` ;;
-  *)   at_optarg= ;;
+  *=?*) at_optarg=`expr "X$at_option" : '[^=]*=\(.*\)'` ;;
+  *)    at_optarg= ;;
   esac
 
   # Accept the important Cygnus configure options, so we can diagnose typos.
@@ -721,24 +755,24 @@ do
 
     [0-9] | [0-9][0-9] | [0-9][0-9][0-9] | [0-9][0-9][0-9][0-9])
 	at_fn_validate_ranges at_option
-	as_fn_append at_groups "$at_option "
+	as_fn_append at_groups "$at_option$as_nl"
 	;;
 
     # Ranges
     [0-9]- | [0-9][0-9]- | [0-9][0-9][0-9]- | [0-9][0-9][0-9][0-9]-)
 	at_range_start=`echo $at_option |tr -d X-`
 	at_fn_validate_ranges at_range_start
-	at_range=`$as_echo " $at_groups_all " | \
-	  sed -e 's/^.* \('$at_range_start' \)/\1/'`
-	as_fn_append at_groups "$at_range "
+	at_range=`$as_echo "$at_groups_all" | \
+	  sed -ne '/^'$at_range_start'$/,$p'`
+	as_fn_append at_groups "$at_range$as_nl"
 	;;
 
     -[0-9] | -[0-9][0-9] | -[0-9][0-9][0-9] | -[0-9][0-9][0-9][0-9])
 	at_range_end=`echo $at_option |tr -d X-`
 	at_fn_validate_ranges at_range_end
-	at_range=`$as_echo " $at_groups_all " | \
-	  sed -e 's/\( '$at_range_end'\) .*$/\1/'`
-	as_fn_append at_groups "$at_range "
+	at_range=`$as_echo "$at_groups_all" | \
+	  sed -ne '1,/^'$at_range_end'$/p'`
+	as_fn_append at_groups "$at_range$as_nl"
 	;;
 
     [0-9]-[0-9] | [0-9]-[0-9][0-9] | [0-9]-[0-9][0-9][0-9] | \
@@ -755,10 +789,9 @@ do
 	  at_range_start=$at_tmp
 	fi
 	at_fn_validate_ranges at_range_start at_range_end
-	at_range=`$as_echo " $at_groups_all " | \
-	  sed -e 's/^.*\( '$at_range_start' \)/\1/' \
-	      -e 's/\( '$at_range_end'\) .*$/\1/'`
-	as_fn_append at_groups "$at_range "
+	at_range=`$as_echo "$at_groups_all" | \
+	  sed -ne '/^'$at_range_start'$/,/^'$at_range_end'$/p'`
+	as_fn_append at_groups "$at_range$as_nl"
 	;;
 
     # Directory selection.
@@ -813,11 +846,9 @@ do
 	  at_groups_selected=`$as_echo "$at_groups_selected" |
 	      grep -i $at_invert "^[1-9][^;]*;.*[; ]$at_keyword[ ;]"`
 	done
-	# Smash the newlines.
-	at_groups_selected=`$as_echo "$at_groups_selected" | sed 's/;.*//' |
-	  tr "$as_nl" ' '
-	`
-	as_fn_append at_groups "$at_groups_selected "
+	# Smash the keywords.
+	at_groups_selected=`$as_echo "$at_groups_selected" | sed 's/;.*//'`
+	as_fn_append at_groups "$at_groups_selected$as_nl"
 	;;
     --recheck)
 	at_recheck=:
@@ -864,11 +895,11 @@ else
 	s/^[ ]*\([1-9][0-9]*\):.*/\1/p
       }
       /^## Detailed failed tests/q
-      ' "$at_suite_log" | tr "$as_nl" ' '`
-    as_fn_append at_groups "$at_oldfails"
+      ' "$at_suite_log"`
+    as_fn_append at_groups "$at_oldfails$as_nl"
   fi
   # Sort the tests, removing duplicates.
-  at_groups=`$as_echo "$at_groups" | tr ' ' "$as_nl" | sort -nu`
+  at_groups=`$as_echo "$at_groups" | sort -nu | sed '/^$/d'`
 fi
 
 if test x"$at_color" = xalways \
@@ -940,27 +971,19 @@ fi
 # List of tests.
 if $at_list_p; then
   cat <<_ATEOF || at_write_fail=1
-btparser 0.13 test suite test groups:
+btparser 0.16 test suite test groups:
 
  NUM: FILE-NAME:LINE     TEST-GROUP-NAME
       KEYWORDS
 
 _ATEOF
-  # Passing at_groups is tricky.  We cannot use it to form a literal string
-  # or regexp because of the limitation of AIX awk.  And Solaris' awk
-  # doesn't grok more than 99 fields in a record, so we have to use `split'.
-  # at_groups needs to be space-separated for this script to work.
-  case $at_groups in
-    *"$as_nl"* )
-      at_groups=`$as_echo "$at_groups" | tr "$as_nl" ' '` ;;
-  esac
-  $as_echo "$at_groups$as_nl$at_help_all" |
-    awk 'BEGIN { FS = ";" }
-	 NR == 1 {
-	   for (n = split ($ 0, a, " "); n; n--)
-	     selected[a[n]] = 1
+  # Pass an empty line as separator between selected groups and help.
+  $as_echo "$at_groups$as_nl$as_nl$at_help_all" |
+    awk 'NF == 1 && FS != ";" {
+	   selected[$ 1] = 1
 	   next
 	 }
+	 /^$/ { FS = ";" }
 	 NF > 0 {
 	   if (selected[$ 1]) {
 	     printf " %3d: %-18s %s\n", $ 1, $ 2, $ 3
@@ -989,7 +1012,7 @@ _ATEOF
   exit $at_write_fail
 fi
 if $at_version_p; then
-  $as_echo "$as_me (btparser 0.13)" &&
+  $as_echo "$as_me (btparser 0.16)" &&
   cat <<\_ATEOF || at_write_fail=1
 
 Copyright (C) 2010 Free Software Foundation, Inc.
@@ -999,14 +1022,13 @@ _ATEOF
   exit $at_write_fail
 fi
 
-# Should we print banners?  at_groups is space-separated for entire test,
-# newline-separated if only a subset of the testsuite is run.
-case $at_groups in
-  *' '*' '* | *"$as_nl"*"$as_nl"* )
-      at_print_banners=: ;;
+# Should we print banners?  Yes if more than one test is run.
+case $at_groups in #(
+  *$as_nl* )
+      at_print_banners=: ;; #(
   * ) at_print_banners=false ;;
 esac
-# Text for banner N, set to empty once printed.
+# Text for banner N, set to a single space once printed.
 # Banner 1. utils.at:3
 # Category starts at test group 1.
 at_banner_text_1="Utils"
@@ -1025,6 +1047,15 @@ at_banner_text_5="Backtraces"
 # Banner 6. normalize.at:3
 # Category starts at test group 41.
 at_banner_text_6="Normalization"
+# Banner 7. metrics.at:1
+# Category starts at test group 43.
+at_banner_text_7="Metrics"
+# Banner 8. cluster.at:1
+# Category starts at test group 62.
+at_banner_text_8="Cluster"
+# Banner 9. sharedlib.at:3
+# Category starts at test group 64.
+at_banner_text_9="sharedlib"
 
 # Take any -C into account.
 if $at_change_dir ; then
@@ -1041,7 +1072,7 @@ do
 done
 
 # Autoconf <=2.59b set at_top_builddir instead of at_top_build_prefix:
-: ${at_top_build_prefix=$at_top_builddir}
+: "${at_top_build_prefix=$at_top_builddir}"
 
 # Perform any assignments requested during argument parsing.
 eval "$at_debug_args"
@@ -1174,6 +1205,7 @@ export PATH
 # Setting up the FDs.
 
 
+
 # 5 is the log file.  Not to be overwritten if `-d'.
 if $at_debug_p; then
   at_suite_log=/dev/null
@@ -1184,11 +1216,11 @@ exec 5>>"$at_suite_log"
 
 # Banners and logs.
 $as_echo "## ------------------------- ##
-## btparser 0.13 test suite. ##
+## btparser 0.16 test suite. ##
 ## ------------------------- ##"
 {
   $as_echo "## ------------------------- ##
-## btparser 0.13 test suite. ##
+## btparser 0.16 test suite. ##
 ## ------------------------- ##"
   echo
 
@@ -1267,9 +1299,13 @@ at_fn_banner ()
 {
   $at_print_banners || return 0
   eval at_banner_text=\$at_banner_text_$1
-  test "x$at_banner_text" = x && return 0
-  eval at_banner_text_$1=
-  $as_echo "$as_nl$at_banner_text$as_nl"
+  test "x$at_banner_text" = "x " && return 0
+  eval "at_banner_text_$1=\" \""
+  if test -z "$at_banner_text"; then
+    $at_first || echo
+  else
+    $as_echo "$as_nl$at_banner_text$as_nl"
+  fi
 } # at_fn_banner
 
 # at_fn_check_prepare_notrace REASON LINE
@@ -1516,7 +1552,7 @@ as_fn_error $? "testsuite directory setup failed" "$LINENO" 5
 
 # at_fn_group_prepare
 # -------------------
-# Prepare running a test group.
+# Prepare for running a test group.
 at_fn_group_prepare ()
 {
   # The directory for additional per-group helper files.
@@ -1575,6 +1611,25 @@ $as_echo "$as_me: WARNING: test directory for $at_group_normalized could not be 
   else
     at_tee_pipe='cat >> "$at_group_log"'
   fi
+}
+
+# at_fn_group_banner ORDINAL LINE DESC PAD [BANNER]
+# -------------------------------------------------
+# Declare the test group ORDINAL, located at LINE with group description DESC,
+# and residing under BANNER. Use PAD to align the status column.
+at_fn_group_banner ()
+{
+  at_setup_line="$2"
+  test -n "$5" && at_fn_banner $5
+  at_desc="$3"
+  case $1 in
+    [0-9])      at_desc_line="  $1: ";;
+    [0-9][0-9]) at_desc_line=" $1: " ;;
+    *)          at_desc_line="$1: "  ;;
+  esac
+  as_fn_append at_desc_line "$3$4"
+  $at_quiet $as_echo_n "$at_desc_line"
+  echo "#                             -*- compilation -*-" >> "$at_group_log"
 }
 
 # at_fn_group_postprocess
@@ -1651,9 +1706,13 @@ _ATEOF
       $as_echo "$at_log_msg" >> "$at_group_log"
       $as_echo "$at_log_msg" >&5
 
-      # Cleanup the group directory, unless the user wants the files.
-      if $at_debug_p; then
+      # Cleanup the group directory, unless the user wants the files
+      # or the success was unexpected.
+      if $at_debug_p || test $at_res = xpass; then
 	at_fn_create_debugging_script
+	if test $at_res = xpass && $at_errexit; then
+	  echo stop > "$at_stop_file"
+	fi
       else
 	if test -d "$at_group_dir"; then
 	  find "$at_group_dir" -type d ! -perm -700 -exec chmod u+rwx \{\} \;
@@ -1739,8 +1798,7 @@ then
 
   echo
   # Turn jobs into a list of numbers, starting from 1.
-  at_joblist=`$as_echo " $at_groups_all " | \
-    sed 's/\( '$at_jobs'\) .*/\1/'`
+  at_joblist=`$as_echo "$at_groups" | sed -n 1,${at_jobs}p`
 
   set X $at_joblist
   shift
@@ -1749,28 +1807,32 @@ then
     (
       # Start one test group.
       $at_job_control_off
-      exec 6>"$at_job_fifo"
+      if $at_first; then
+	exec 7>"$at_job_fifo"
+      else
+	exec 6<&-
+      fi
       trap 'set +x; set +e
 	    trap "" PIPE
 	    echo stop > "$at_stop_file"
-	    echo token >&6
+	    echo >&7
 	    as_fn_exit 141' PIPE
       at_fn_group_prepare
       if cd "$at_group_dir" &&
 	 at_fn_test $at_group &&
-	 . "$at_test_source" # AT_JOB_FIFO_FD>&-
+	 . "$at_test_source"
       then :; else
 	{ $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: unable to parse test group: $at_group" >&5
 $as_echo "$as_me: WARNING: unable to parse test group: $at_group" >&2;}
 	at_failed=:
       fi
       at_fn_group_postprocess
-      echo token >&6
+      echo >&7
     ) &
     $at_job_control_off
     if $at_first; then
       at_first=false
-      exec 6<"$at_job_fifo"
+      exec 6<"$at_job_fifo" 7>"$at_job_fifo"
     fi
     shift # Consume one token.
     if test $# -gt 0; then :; else
@@ -1779,6 +1841,7 @@ $as_echo "$as_me: WARNING: unable to parse test group: $at_group" >&2;}
     fi
     test -f "$at_stop_file" && break
   done
+  exec 7>&-
   # Read back the remaining ($at_jobs - 1) tokens.
   set X $at_joblist
   shift
@@ -2001,7 +2064,7 @@ _ASBOX
   $as_echo "Please send $at_msg and all information you think might help:
 
    To: <kklic@redhat.com>
-   Subject: [btparser 0.13] $as_me: $at_fail_list${at_fail_list:+ failed${at_xpass_list:+, }}$at_xpass_list${at_xpass_list:+ passed unexpectedly}
+   Subject: [btparser 0.16] $as_me: $at_fail_list${at_fail_list:+ failed${at_xpass_list:+, }}$at_xpass_list${at_xpass_list:+ passed unexpectedly}
 
 You may investigate any problem if you feel able to do so, in which
 case the test suite provides a good starting point.  Its output may
@@ -2016,16 +2079,11 @@ exit 0
 ## Actual tests. ##
 ## ------------- ##
 #AT_START_1
-# 1. utils.at:9: btp_strcmp0
-at_setup_line='utils.at:9'
-at_fn_banner 1
-at_desc="btp_strcmp0"
-at_desc_line="  1: $at_desc                                    "
-$at_quiet $as_echo_n "$at_desc_line"
+at_fn_group_banner 1 'utils.at:9' \
+  "btp_strcmp0" "                                    " 1
 at_xfail=no
-echo "#                             -*- compilation -*-" >> "$at_group_log"
 (
-  $as_echo "1. utils.at:9: testing $at_desc ..."
+  $as_echo "1. $at_setup_line: testing $at_desc ..."
   $at_traceon
 
 cat >btp_strcmp0.c <<'_ATEOF'
@@ -2072,20 +2130,15 @@ $at_traceon; }
 
   set +x
   $at_times_p && times >"$at_times_file"
-) 5>&1 2>&1 | eval $at_tee_pipe
+) 5>&1 2>&1 7>&- | eval $at_tee_pipe
 read at_status <"$at_status_file"
 #AT_STOP_1
 #AT_START_2
-# 2. utils.at:29: btp_strchr_location
-at_setup_line='utils.at:29'
-at_fn_banner 1
-at_desc="btp_strchr_location"
-at_desc_line="  2: $at_desc                            "
-$at_quiet $as_echo_n "$at_desc_line"
+at_fn_group_banner 2 'utils.at:29' \
+  "btp_strchr_location" "                            " 1
 at_xfail=no
-echo "#                             -*- compilation -*-" >> "$at_group_log"
 (
-  $as_echo "2. utils.at:29: testing $at_desc ..."
+  $as_echo "2. $at_setup_line: testing $at_desc ..."
   $at_traceon
 
 cat >btp_strchr_location.c <<'_ATEOF'
@@ -2148,20 +2201,15 @@ $at_traceon; }
 
   set +x
   $at_times_p && times >"$at_times_file"
-) 5>&1 2>&1 | eval $at_tee_pipe
+) 5>&1 2>&1 7>&- | eval $at_tee_pipe
 read at_status <"$at_status_file"
 #AT_STOP_2
 #AT_START_3
-# 3. utils.at:65: btp_strstr_location
-at_setup_line='utils.at:65'
-at_fn_banner 1
-at_desc="btp_strstr_location"
-at_desc_line="  3: $at_desc                            "
-$at_quiet $as_echo_n "$at_desc_line"
+at_fn_group_banner 3 'utils.at:65' \
+  "btp_strstr_location" "                            " 1
 at_xfail=no
-echo "#                             -*- compilation -*-" >> "$at_group_log"
 (
-  $as_echo "3. utils.at:65: testing $at_desc ..."
+  $as_echo "3. $at_setup_line: testing $at_desc ..."
   $at_traceon
 
 cat >btp_strstr_location.c <<'_ATEOF'
@@ -2228,20 +2276,15 @@ $at_traceon; }
 
   set +x
   $at_times_p && times >"$at_times_file"
-) 5>&1 2>&1 | eval $at_tee_pipe
+) 5>&1 2>&1 7>&- | eval $at_tee_pipe
 read at_status <"$at_status_file"
 #AT_STOP_3
 #AT_START_4
-# 4. utils.at:105: btp_strspn_location
-at_setup_line='utils.at:105'
-at_fn_banner 1
-at_desc="btp_strspn_location"
-at_desc_line="  4: $at_desc                            "
-$at_quiet $as_echo_n "$at_desc_line"
+at_fn_group_banner 4 'utils.at:105' \
+  "btp_strspn_location" "                            " 1
 at_xfail=no
-echo "#                             -*- compilation -*-" >> "$at_group_log"
 (
-  $as_echo "4. utils.at:105: testing $at_desc ..."
+  $as_echo "4. $at_setup_line: testing $at_desc ..."
   $at_traceon
 
 cat >btp_strspn_location.c <<'_ATEOF'
@@ -2301,20 +2344,15 @@ $at_traceon; }
 
   set +x
   $at_times_p && times >"$at_times_file"
-) 5>&1 2>&1 | eval $at_tee_pipe
+) 5>&1 2>&1 7>&- | eval $at_tee_pipe
 read at_status <"$at_status_file"
 #AT_STOP_4
 #AT_START_5
-# 5. utils.at:138: btp_skip_char
-at_setup_line='utils.at:138'
-at_fn_banner 1
-at_desc="btp_skip_char"
-at_desc_line="  5: $at_desc                                  "
-$at_quiet $as_echo_n "$at_desc_line"
+at_fn_group_banner 5 'utils.at:138' \
+  "btp_skip_char" "                                  " 1
 at_xfail=no
-echo "#                             -*- compilation -*-" >> "$at_group_log"
 (
-  $as_echo "5. utils.at:138: testing $at_desc ..."
+  $as_echo "5. $at_setup_line: testing $at_desc ..."
   $at_traceon
 
 cat >btp_skip_char.c <<'_ATEOF'
@@ -2358,20 +2396,15 @@ $at_traceon; }
 
   set +x
   $at_times_p && times >"$at_times_file"
-) 5>&1 2>&1 | eval $at_tee_pipe
+) 5>&1 2>&1 7>&- | eval $at_tee_pipe
 read at_status <"$at_status_file"
 #AT_STOP_5
 #AT_START_6
-# 6. utils.at:155: btp_skip_char_limited
-at_setup_line='utils.at:155'
-at_fn_banner 1
-at_desc="btp_skip_char_limited"
-at_desc_line="  6: $at_desc                          "
-$at_quiet $as_echo_n "$at_desc_line"
+at_fn_group_banner 6 'utils.at:155' \
+  "btp_skip_char_limited" "                          " 1
 at_xfail=no
-echo "#                             -*- compilation -*-" >> "$at_group_log"
 (
-  $as_echo "6. utils.at:155: testing $at_desc ..."
+  $as_echo "6. $at_setup_line: testing $at_desc ..."
   $at_traceon
 
 cat >btp_skip_char_limited.c <<'_ATEOF'
@@ -2416,20 +2449,15 @@ $at_traceon; }
 
   set +x
   $at_times_p && times >"$at_times_file"
-) 5>&1 2>&1 | eval $at_tee_pipe
+) 5>&1 2>&1 7>&- | eval $at_tee_pipe
 read at_status <"$at_status_file"
 #AT_STOP_6
 #AT_START_7
-# 7. utils.at:173: btp_parse_char_limited
-at_setup_line='utils.at:173'
-at_fn_banner 1
-at_desc="btp_parse_char_limited"
-at_desc_line="  7: $at_desc                         "
-$at_quiet $as_echo_n "$at_desc_line"
+at_fn_group_banner 7 'utils.at:173' \
+  "btp_parse_char_limited" "                         " 1
 at_xfail=no
-echo "#                             -*- compilation -*-" >> "$at_group_log"
 (
-  $as_echo "7. utils.at:173: testing $at_desc ..."
+  $as_echo "7. $at_setup_line: testing $at_desc ..."
   $at_traceon
 
 cat >btp_parse_char_limited.c <<'_ATEOF'
@@ -2493,20 +2521,15 @@ $at_traceon; }
 
   set +x
   $at_times_p && times >"$at_times_file"
-) 5>&1 2>&1 | eval $at_tee_pipe
+) 5>&1 2>&1 7>&- | eval $at_tee_pipe
 read at_status <"$at_status_file"
 #AT_STOP_7
 #AT_START_8
-# 8. utils.at:210: btp_skip_char_sequence
-at_setup_line='utils.at:210'
-at_fn_banner 1
-at_desc="btp_skip_char_sequence"
-at_desc_line="  8: $at_desc                         "
-$at_quiet $as_echo_n "$at_desc_line"
+at_fn_group_banner 8 'utils.at:210' \
+  "btp_skip_char_sequence" "                         " 1
 at_xfail=no
-echo "#                             -*- compilation -*-" >> "$at_group_log"
 (
-  $as_echo "8. utils.at:210: testing $at_desc ..."
+  $as_echo "8. $at_setup_line: testing $at_desc ..."
   $at_traceon
 
 cat >btp_skip_char_sequence.c <<'_ATEOF'
@@ -2551,20 +2574,15 @@ $at_traceon; }
 
   set +x
   $at_times_p && times >"$at_times_file"
-) 5>&1 2>&1 | eval $at_tee_pipe
+) 5>&1 2>&1 7>&- | eval $at_tee_pipe
 read at_status <"$at_status_file"
 #AT_STOP_8
 #AT_START_9
-# 9. utils.at:228: btp_skip_char_span
-at_setup_line='utils.at:228'
-at_fn_banner 1
-at_desc="btp_skip_char_span"
-at_desc_line="  9: $at_desc                             "
-$at_quiet $as_echo_n "$at_desc_line"
+at_fn_group_banner 9 'utils.at:228' \
+  "btp_skip_char_span" "                             " 1
 at_xfail=no
-echo "#                             -*- compilation -*-" >> "$at_group_log"
 (
-  $as_echo "9. utils.at:228: testing $at_desc ..."
+  $as_echo "9. $at_setup_line: testing $at_desc ..."
   $at_traceon
 
 cat >btp_skip_char_span.c <<'_ATEOF'
@@ -2613,20 +2631,15 @@ $at_traceon; }
 
   set +x
   $at_times_p && times >"$at_times_file"
-) 5>&1 2>&1 | eval $at_tee_pipe
+) 5>&1 2>&1 7>&- | eval $at_tee_pipe
 read at_status <"$at_status_file"
 #AT_STOP_9
 #AT_START_10
-# 10. utils.at:250: btp_skip_char_span_location
-at_setup_line='utils.at:250'
-at_fn_banner 1
-at_desc="btp_skip_char_span_location"
-at_desc_line=" 10: $at_desc                    "
-$at_quiet $as_echo_n "$at_desc_line"
+at_fn_group_banner 10 'utils.at:250' \
+  "btp_skip_char_span_location" "                    " 1
 at_xfail=no
-echo "#                             -*- compilation -*-" >> "$at_group_log"
 (
-  $as_echo "10. utils.at:250: testing $at_desc ..."
+  $as_echo "10. $at_setup_line: testing $at_desc ..."
   $at_traceon
 
 cat >btp_skip_char_span_location.c <<'_ATEOF'
@@ -2687,20 +2700,15 @@ $at_traceon; }
 
   set +x
   $at_times_p && times >"$at_times_file"
-) 5>&1 2>&1 | eval $at_tee_pipe
+) 5>&1 2>&1 7>&- | eval $at_tee_pipe
 read at_status <"$at_status_file"
 #AT_STOP_10
 #AT_START_11
-# 11. utils.at:284: btp_parse_char_span
-at_setup_line='utils.at:284'
-at_fn_banner 1
-at_desc="btp_parse_char_span"
-at_desc_line=" 11: $at_desc                            "
-$at_quiet $as_echo_n "$at_desc_line"
+at_fn_group_banner 11 'utils.at:284' \
+  "btp_parse_char_span" "                            " 1
 at_xfail=no
-echo "#                             -*- compilation -*-" >> "$at_group_log"
 (
-  $as_echo "11. utils.at:284: testing $at_desc ..."
+  $as_echo "11. $at_setup_line: testing $at_desc ..."
   $at_traceon
 
 cat >btp_parse_char_span.c <<'_ATEOF'
@@ -2751,20 +2759,15 @@ $at_traceon; }
 
   set +x
   $at_times_p && times >"$at_times_file"
-) 5>&1 2>&1 | eval $at_tee_pipe
+) 5>&1 2>&1 7>&- | eval $at_tee_pipe
 read at_status <"$at_status_file"
 #AT_STOP_11
 #AT_START_12
-# 12. utils.at:308: btp_parse_char_cspan
-at_setup_line='utils.at:308'
-at_fn_banner 1
-at_desc="btp_parse_char_cspan"
-at_desc_line=" 12: $at_desc                           "
-$at_quiet $as_echo_n "$at_desc_line"
+at_fn_group_banner 12 'utils.at:308' \
+  "btp_parse_char_cspan" "                           " 1
 at_xfail=no
-echo "#                             -*- compilation -*-" >> "$at_group_log"
 (
-  $as_echo "12. utils.at:308: testing $at_desc ..."
+  $as_echo "12. $at_setup_line: testing $at_desc ..."
   $at_traceon
 
 cat >btp_parse_char_cspan.c <<'_ATEOF'
@@ -2815,20 +2818,15 @@ $at_traceon; }
 
   set +x
   $at_times_p && times >"$at_times_file"
-) 5>&1 2>&1 | eval $at_tee_pipe
+) 5>&1 2>&1 7>&- | eval $at_tee_pipe
 read at_status <"$at_status_file"
 #AT_STOP_12
 #AT_START_13
-# 13. utils.at:332: btp_skip_string
-at_setup_line='utils.at:332'
-at_fn_banner 1
-at_desc="btp_skip_string"
-at_desc_line=" 13: $at_desc                                "
-$at_quiet $as_echo_n "$at_desc_line"
+at_fn_group_banner 13 'utils.at:332' \
+  "btp_skip_string" "                                " 1
 at_xfail=no
-echo "#                             -*- compilation -*-" >> "$at_group_log"
 (
-  $as_echo "13. utils.at:332: testing $at_desc ..."
+  $as_echo "13. $at_setup_line: testing $at_desc ..."
   $at_traceon
 
 cat >btp_skip_string.c <<'_ATEOF'
@@ -2875,20 +2873,15 @@ $at_traceon; }
 
   set +x
   $at_times_p && times >"$at_times_file"
-) 5>&1 2>&1 | eval $at_tee_pipe
+) 5>&1 2>&1 7>&- | eval $at_tee_pipe
 read at_status <"$at_status_file"
 #AT_STOP_13
 #AT_START_14
-# 14. utils.at:352: btp_parse_string
-at_setup_line='utils.at:352'
-at_fn_banner 1
-at_desc="btp_parse_string"
-at_desc_line=" 14: $at_desc                               "
-$at_quiet $as_echo_n "$at_desc_line"
+at_fn_group_banner 14 'utils.at:352' \
+  "btp_parse_string" "                               " 1
 at_xfail=no
-echo "#                             -*- compilation -*-" >> "$at_group_log"
 (
-  $as_echo "14. utils.at:352: testing $at_desc ..."
+  $as_echo "14. $at_setup_line: testing $at_desc ..."
   $at_traceon
 
 cat >btp_parse_string.c <<'_ATEOF'
@@ -2935,20 +2928,15 @@ $at_traceon; }
 
   set +x
   $at_times_p && times >"$at_times_file"
-) 5>&1 2>&1 | eval $at_tee_pipe
+) 5>&1 2>&1 7>&- | eval $at_tee_pipe
 read at_status <"$at_status_file"
 #AT_STOP_14
 #AT_START_15
-# 15. utils.at:372: btp_skip_unsigned_integer
-at_setup_line='utils.at:372'
-at_fn_banner 1
-at_desc="btp_skip_unsigned_integer"
-at_desc_line=" 15: $at_desc                      "
-$at_quiet $as_echo_n "$at_desc_line"
+at_fn_group_banner 15 'utils.at:372' \
+  "btp_skip_unsigned_integer" "                      " 1
 at_xfail=no
-echo "#                             -*- compilation -*-" >> "$at_group_log"
 (
-  $as_echo "15. utils.at:372: testing $at_desc ..."
+  $as_echo "15. $at_setup_line: testing $at_desc ..."
   $at_traceon
 
 cat >btp_skip_unsigned_integer.c <<'_ATEOF'
@@ -2992,20 +2980,15 @@ $at_traceon; }
 
   set +x
   $at_times_p && times >"$at_times_file"
-) 5>&1 2>&1 | eval $at_tee_pipe
+) 5>&1 2>&1 7>&- | eval $at_tee_pipe
 read at_status <"$at_status_file"
 #AT_STOP_15
 #AT_START_16
-# 16. utils.at:389: btp_parse_unsigned_integer
-at_setup_line='utils.at:389'
-at_fn_banner 1
-at_desc="btp_parse_unsigned_integer"
-at_desc_line=" 16: $at_desc                     "
-$at_quiet $as_echo_n "$at_desc_line"
+at_fn_group_banner 16 'utils.at:389' \
+  "btp_parse_unsigned_integer" "                     " 1
 at_xfail=no
-echo "#                             -*- compilation -*-" >> "$at_group_log"
 (
-  $as_echo "16. utils.at:389: testing $at_desc ..."
+  $as_echo "16. $at_setup_line: testing $at_desc ..."
   $at_traceon
 
 cat >btp_parse_unsigned_integer.c <<'_ATEOF'
@@ -3051,20 +3034,15 @@ $at_traceon; }
 
   set +x
   $at_times_p && times >"$at_times_file"
-) 5>&1 2>&1 | eval $at_tee_pipe
+) 5>&1 2>&1 7>&- | eval $at_tee_pipe
 read at_status <"$at_status_file"
 #AT_STOP_16
 #AT_START_17
-# 17. utils.at:408: btp_skip_hexadecimal_number
-at_setup_line='utils.at:408'
-at_fn_banner 1
-at_desc="btp_skip_hexadecimal_number"
-at_desc_line=" 17: $at_desc                    "
-$at_quiet $as_echo_n "$at_desc_line"
+at_fn_group_banner 17 'utils.at:408' \
+  "btp_skip_hexadecimal_number" "                    " 1
 at_xfail=no
-echo "#                             -*- compilation -*-" >> "$at_group_log"
 (
-  $as_echo "17. utils.at:408: testing $at_desc ..."
+  $as_echo "17. $at_setup_line: testing $at_desc ..."
   $at_traceon
 
 cat >btp_skip_hexadecimal_number.c <<'_ATEOF'
@@ -3108,20 +3086,15 @@ $at_traceon; }
 
   set +x
   $at_times_p && times >"$at_times_file"
-) 5>&1 2>&1 | eval $at_tee_pipe
+) 5>&1 2>&1 7>&- | eval $at_tee_pipe
 read at_status <"$at_status_file"
 #AT_STOP_17
 #AT_START_18
-# 18. utils.at:425: btp_parse_hexadecimal_number
-at_setup_line='utils.at:425'
-at_fn_banner 1
-at_desc="btp_parse_hexadecimal_number"
-at_desc_line=" 18: $at_desc                   "
-$at_quiet $as_echo_n "$at_desc_line"
+at_fn_group_banner 18 'utils.at:425' \
+  "btp_parse_hexadecimal_number" "                   " 1
 at_xfail=no
-echo "#                             -*- compilation -*-" >> "$at_group_log"
 (
-  $as_echo "18. utils.at:425: testing $at_desc ..."
+  $as_echo "18. $at_setup_line: testing $at_desc ..."
   $at_traceon
 
 cat >btp_parse_hexadecimal_number.c <<'_ATEOF'
@@ -3171,20 +3144,15 @@ $at_traceon; }
 
   set +x
   $at_times_p && times >"$at_times_file"
-) 5>&1 2>&1 | eval $at_tee_pipe
+) 5>&1 2>&1 7>&- | eval $at_tee_pipe
 read at_status <"$at_status_file"
 #AT_STOP_18
 #AT_START_19
-# 19. strbuf.at:9: btp_strbuf_append_char
-at_setup_line='strbuf.at:9'
-at_fn_banner 2
-at_desc="btp_strbuf_append_char"
-at_desc_line=" 19: $at_desc                         "
-$at_quiet $as_echo_n "$at_desc_line"
+at_fn_group_banner 19 'strbuf.at:9' \
+  "btp_strbuf_append_char" "                         " 2
 at_xfail=no
-echo "#                             -*- compilation -*-" >> "$at_group_log"
 (
-  $as_echo "19. strbuf.at:9: testing $at_desc ..."
+  $as_echo "19. $at_setup_line: testing $at_desc ..."
   $at_traceon
 
 cat >btp_strbuf_append_char.c <<'_ATEOF'
@@ -3239,20 +3207,15 @@ $at_traceon; }
 
   set +x
   $at_times_p && times >"$at_times_file"
-) 5>&1 2>&1 | eval $at_tee_pipe
+) 5>&1 2>&1 7>&- | eval $at_tee_pipe
 read at_status <"$at_status_file"
 #AT_STOP_19
 #AT_START_20
-# 20. strbuf.at:37: btp_strbuf_append_str
-at_setup_line='strbuf.at:37'
-at_fn_banner 2
-at_desc="btp_strbuf_append_str"
-at_desc_line=" 20: $at_desc                          "
-$at_quiet $as_echo_n "$at_desc_line"
+at_fn_group_banner 20 'strbuf.at:37' \
+  "btp_strbuf_append_str" "                          " 2
 at_xfail=no
-echo "#                             -*- compilation -*-" >> "$at_group_log"
 (
-  $as_echo "20. strbuf.at:37: testing $at_desc ..."
+  $as_echo "20. $at_setup_line: testing $at_desc ..."
   $at_traceon
 
 cat >btp_strbuf_append_str.c <<'_ATEOF'
@@ -3321,20 +3284,15 @@ $at_traceon; }
 
   set +x
   $at_times_p && times >"$at_times_file"
-) 5>&1 2>&1 | eval $at_tee_pipe
+) 5>&1 2>&1 7>&- | eval $at_tee_pipe
 read at_status <"$at_status_file"
 #AT_STOP_20
 #AT_START_21
-# 21. frame.at:9: btp_frame_dup
-at_setup_line='frame.at:9'
-at_fn_banner 3
-at_desc="btp_frame_dup"
-at_desc_line=" 21: $at_desc                                  "
-$at_quiet $as_echo_n "$at_desc_line"
+at_fn_group_banner 21 'frame.at:9' \
+  "btp_frame_dup" "                                  " 3
 at_xfail=no
-echo "#                             -*- compilation -*-" >> "$at_group_log"
 (
-  $as_echo "21. frame.at:9: testing $at_desc ..."
+  $as_echo "21. $at_setup_line: testing $at_desc ..."
   $at_traceon
 
 cat >btp_frame_dup.c <<'_ATEOF'
@@ -3416,20 +3374,15 @@ $at_traceon; }
 
   set +x
   $at_times_p && times >"$at_times_file"
-) 5>&1 2>&1 | eval $at_tee_pipe
+) 5>&1 2>&1 7>&- | eval $at_tee_pipe
 read at_status <"$at_status_file"
 #AT_STOP_21
 #AT_START_22
-# 22. frame.at:64: btp_frame_parse_frame_start
-at_setup_line='frame.at:64'
-at_fn_banner 3
-at_desc="btp_frame_parse_frame_start"
-at_desc_line=" 22: $at_desc                    "
-$at_quiet $as_echo_n "$at_desc_line"
+at_fn_group_banner 22 'frame.at:64' \
+  "btp_frame_parse_frame_start" "                    " 3
 at_xfail=no
-echo "#                             -*- compilation -*-" >> "$at_group_log"
 (
-  $as_echo "22. frame.at:64: testing $at_desc ..."
+  $as_echo "22. $at_setup_line: testing $at_desc ..."
   $at_traceon
 
 cat >btp_frame_parse_frame_start.c <<'_ATEOF'
@@ -3504,20 +3457,15 @@ $at_traceon; }
 
   set +x
   $at_times_p && times >"$at_times_file"
-) 5>&1 2>&1 | eval $at_tee_pipe
+) 5>&1 2>&1 7>&- | eval $at_tee_pipe
 read at_status <"$at_status_file"
 #AT_STOP_22
 #AT_START_23
-# 23. frame.at:112: btp_frame_parseadd_operator
-at_setup_line='frame.at:112'
-at_fn_banner 3
-at_desc="btp_frame_parseadd_operator"
-at_desc_line=" 23: $at_desc                    "
-$at_quiet $as_echo_n "$at_desc_line"
+at_fn_group_banner 23 'frame.at:112' \
+  "btp_frame_parseadd_operator" "                    " 3
 at_xfail=no
-echo "#                             -*- compilation -*-" >> "$at_group_log"
 (
-  $as_echo "23. frame.at:112: testing $at_desc ..."
+  $as_echo "23. $at_setup_line: testing $at_desc ..."
   $at_traceon
 
 cat >btp_frame_parseadd_operator.c <<'_ATEOF'
@@ -3588,20 +3536,15 @@ $at_traceon; }
 
   set +x
   $at_times_p && times >"$at_times_file"
-) 5>&1 2>&1 | eval $at_tee_pipe
+) 5>&1 2>&1 7>&- | eval $at_tee_pipe
 read at_status <"$at_status_file"
 #AT_STOP_23
 #AT_START_24
-# 24. frame.at:156: btp_frame_parse_function_name
-at_setup_line='frame.at:156'
-at_fn_banner 3
-at_desc="btp_frame_parse_function_name"
-at_desc_line=" 24: $at_desc                  "
-$at_quiet $as_echo_n "$at_desc_line"
+at_fn_group_banner 24 'frame.at:156' \
+  "btp_frame_parse_function_name" "                  " 3
 at_xfail=no
-echo "#                             -*- compilation -*-" >> "$at_group_log"
 (
-  $as_echo "24. frame.at:156: testing $at_desc ..."
+  $as_echo "24. $at_setup_line: testing $at_desc ..."
   $at_traceon
 
 cat >btp_frame_parse_function_name.c <<'_ATEOF'
@@ -3690,20 +3633,15 @@ $at_traceon; }
 
   set +x
   $at_times_p && times >"$at_times_file"
-) 5>&1 2>&1 | eval $at_tee_pipe
+) 5>&1 2>&1 7>&- | eval $at_tee_pipe
 read at_status <"$at_status_file"
 #AT_STOP_24
 #AT_START_25
-# 25. frame.at:218: btp_frame_skip_function_args
-at_setup_line='frame.at:218'
-at_fn_banner 3
-at_desc="btp_frame_skip_function_args"
-at_desc_line=" 25: $at_desc                   "
-$at_quiet $as_echo_n "$at_desc_line"
+at_fn_group_banner 25 'frame.at:218' \
+  "btp_frame_skip_function_args" "                   " 3
 at_xfail=no
-echo "#                             -*- compilation -*-" >> "$at_group_log"
 (
-  $as_echo "25. frame.at:218: testing $at_desc ..."
+  $as_echo "25. $at_setup_line: testing $at_desc ..."
   $at_traceon
 
 cat >btp_frame_skip_function_args.c <<'_ATEOF'
@@ -3774,20 +3712,15 @@ $at_traceon; }
 
   set +x
   $at_times_p && times >"$at_times_file"
-) 5>&1 2>&1 | eval $at_tee_pipe
+) 5>&1 2>&1 7>&- | eval $at_tee_pipe
 read at_status <"$at_status_file"
 #AT_STOP_25
 #AT_START_26
-# 26. frame.at:262: btp_frame_parse_function_call
-at_setup_line='frame.at:262'
-at_fn_banner 3
-at_desc="btp_frame_parse_function_call"
-at_desc_line=" 26: $at_desc                  "
-$at_quiet $as_echo_n "$at_desc_line"
+at_fn_group_banner 26 'frame.at:262' \
+  "btp_frame_parse_function_call" "                  " 3
 at_xfail=no
-echo "#                             -*- compilation -*-" >> "$at_group_log"
 (
-  $as_echo "26. frame.at:262: testing $at_desc ..."
+  $as_echo "26. $at_setup_line: testing $at_desc ..."
   $at_traceon
 
 cat >btp_frame_parse_function_call.c <<'_ATEOF'
@@ -3919,20 +3852,15 @@ $at_traceon; }
 
   set +x
   $at_times_p && times >"$at_times_file"
-) 5>&1 2>&1 | eval $at_tee_pipe
+) 5>&1 2>&1 7>&- | eval $at_tee_pipe
 read at_status <"$at_status_file"
 #AT_STOP_26
 #AT_START_27
-# 27. frame.at:367: btp_frame_parse_address_in_function
-at_setup_line='frame.at:367'
-at_fn_banner 3
-at_desc="btp_frame_parse_address_in_function"
-at_desc_line=" 27: $at_desc            "
-$at_quiet $as_echo_n "$at_desc_line"
+at_fn_group_banner 27 'frame.at:367' \
+  "btp_frame_parse_address_in_function" "            " 3
 at_xfail=no
-echo "#                             -*- compilation -*-" >> "$at_group_log"
 (
-  $as_echo "27. frame.at:367: testing $at_desc ..."
+  $as_echo "27. $at_setup_line: testing $at_desc ..."
   $at_traceon
 
 cat >btp_frame_parse_address_in_function.c <<'_ATEOF'
@@ -3975,6 +3903,8 @@ void check(bool success,
 int main(void)
 {
   /* minimal */
+  check(true, "raise (sig=6)", -1, "raise");
+  /* still simple */
   check(true, "0x00ad0a91 in raise (sig=6)", 0xad0a91, "raise");
   /* longnum */
   check(true, "0xf00000322221730e in IA__g_bookmark_file_to_file (\n"
@@ -4013,20 +3943,15 @@ $at_traceon; }
 
   set +x
   $at_times_p && times >"$at_times_file"
-) 5>&1 2>&1 | eval $at_tee_pipe
+) 5>&1 2>&1 7>&- | eval $at_tee_pipe
 read at_status <"$at_status_file"
 #AT_STOP_27
 #AT_START_28
-# 28. frame.at:421: btp_frame_parse_file_location
-at_setup_line='frame.at:421'
-at_fn_banner 3
-at_desc="btp_frame_parse_file_location"
-at_desc_line=" 28: $at_desc                  "
-$at_quiet $as_echo_n "$at_desc_line"
+at_fn_group_banner 28 'frame.at:423' \
+  "btp_frame_parse_file_location" "                  " 3
 at_xfail=no
-echo "#                             -*- compilation -*-" >> "$at_group_log"
 (
-  $as_echo "28. frame.at:421: testing $at_desc ..."
+  $as_echo "28. $at_setup_line: testing $at_desc ..."
   $at_traceon
 
 cat >btp_frame_parse_file_location.c <<'_ATEOF'
@@ -4088,47 +4013,42 @@ int main(void)
 _ATEOF
 
 { set +x
-$as_echo "$at_srcdir/frame.at:421: \$LIBTOOL --mode=link \$CC \$CFLAGS \$LDFLAGS -o btp_frame_parse_file_location btp_frame_parse_file_location.c \$LIBS"
-at_fn_check_prepare_dynamic "$LIBTOOL --mode=link $CC $CFLAGS $LDFLAGS -o btp_frame_parse_file_location btp_frame_parse_file_location.c $LIBS" "frame.at:421"
+$as_echo "$at_srcdir/frame.at:423: \$LIBTOOL --mode=link \$CC \$CFLAGS \$LDFLAGS -o btp_frame_parse_file_location btp_frame_parse_file_location.c \$LIBS"
+at_fn_check_prepare_dynamic "$LIBTOOL --mode=link $CC $CFLAGS $LDFLAGS -o btp_frame_parse_file_location btp_frame_parse_file_location.c $LIBS" "frame.at:423"
 ( $at_check_trace; $LIBTOOL --mode=link $CC $CFLAGS $LDFLAGS -o btp_frame_parse_file_location btp_frame_parse_file_location.c $LIBS
 ) >>"$at_stdout" 2>>"$at_stderr"
 at_status=$? at_failed=false
 $at_check_filter
 echo stderr:; cat "$at_stderr"
 echo stdout:; cat "$at_stdout"
-at_fn_check_status 0 $at_status "$at_srcdir/frame.at:421"
+at_fn_check_status 0 $at_status "$at_srcdir/frame.at:423"
 $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/frame.at:421: ./btp_frame_parse_file_location"
-at_fn_check_prepare_trace "frame.at:421"
+$as_echo "$at_srcdir/frame.at:423: ./btp_frame_parse_file_location"
+at_fn_check_prepare_trace "frame.at:423"
 ( $at_check_trace; ./btp_frame_parse_file_location
 ) >>"$at_stdout" 2>>"$at_stderr"
 at_status=$? at_failed=false
 $at_check_filter
 echo stderr:; cat "$at_stderr"
 echo stdout:; cat "$at_stdout"
-at_fn_check_status 0 $at_status "$at_srcdir/frame.at:421"
+at_fn_check_status 0 $at_status "$at_srcdir/frame.at:423"
 $at_failed && at_fn_log_failure
 $at_traceon; }
 
   set +x
   $at_times_p && times >"$at_times_file"
-) 5>&1 2>&1 | eval $at_tee_pipe
+) 5>&1 2>&1 7>&- | eval $at_tee_pipe
 read at_status <"$at_status_file"
 #AT_STOP_28
 #AT_START_29
-# 29. frame.at:483: btp_frame_parse_header
-at_setup_line='frame.at:483'
-at_fn_banner 3
-at_desc="btp_frame_parse_header"
-at_desc_line=" 29: $at_desc                         "
-$at_quiet $as_echo_n "$at_desc_line"
+at_fn_group_banner 29 'frame.at:485' \
+  "btp_frame_parse_header" "                         " 3
 at_xfail=no
-echo "#                             -*- compilation -*-" >> "$at_group_log"
 (
-  $as_echo "29. frame.at:483: testing $at_desc ..."
+  $as_echo "29. $at_setup_line: testing $at_desc ..."
   $at_traceon
 
 cat >btp_frame_parse_header.c <<'_ATEOF'
@@ -4168,8 +4088,17 @@ void check(char *input,
 
 int main(void)
 {
-  /* basic */
+  /* no function address - rhbz#752811 */
   struct btp_frame frame;
+  btp_frame_init(&frame);
+  frame.function_name = "slot_tp_getattr_hook";
+  frame.number = 0;
+  frame.source_file = "/usr/src/debug/Python-2.7.1/Objects/typeobject.c";
+  frame.source_line = 5436;
+  frame.address = -1;
+  check("#0  slot_tp_getattr_hook (self=<YumAvailableP...>) at /usr/src/debug/Python-2.7.1/Objects/typeobject.c:5436", &frame);
+
+  /* basic */
   btp_frame_init(&frame);
   frame.function_name = "fsync";
   frame.number = 1;
@@ -4210,47 +4139,42 @@ int main(void)
 _ATEOF
 
 { set +x
-$as_echo "$at_srcdir/frame.at:483: \$LIBTOOL --mode=link \$CC \$CFLAGS \$LDFLAGS -o btp_frame_parse_header btp_frame_parse_header.c \$LIBS"
-at_fn_check_prepare_dynamic "$LIBTOOL --mode=link $CC $CFLAGS $LDFLAGS -o btp_frame_parse_header btp_frame_parse_header.c $LIBS" "frame.at:483"
+$as_echo "$at_srcdir/frame.at:485: \$LIBTOOL --mode=link \$CC \$CFLAGS \$LDFLAGS -o btp_frame_parse_header btp_frame_parse_header.c \$LIBS"
+at_fn_check_prepare_dynamic "$LIBTOOL --mode=link $CC $CFLAGS $LDFLAGS -o btp_frame_parse_header btp_frame_parse_header.c $LIBS" "frame.at:485"
 ( $at_check_trace; $LIBTOOL --mode=link $CC $CFLAGS $LDFLAGS -o btp_frame_parse_header btp_frame_parse_header.c $LIBS
 ) >>"$at_stdout" 2>>"$at_stderr"
 at_status=$? at_failed=false
 $at_check_filter
 echo stderr:; cat "$at_stderr"
 echo stdout:; cat "$at_stdout"
-at_fn_check_status 0 $at_status "$at_srcdir/frame.at:483"
+at_fn_check_status 0 $at_status "$at_srcdir/frame.at:485"
 $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/frame.at:483: ./btp_frame_parse_header"
-at_fn_check_prepare_trace "frame.at:483"
+$as_echo "$at_srcdir/frame.at:485: ./btp_frame_parse_header"
+at_fn_check_prepare_trace "frame.at:485"
 ( $at_check_trace; ./btp_frame_parse_header
 ) >>"$at_stdout" 2>>"$at_stderr"
 at_status=$? at_failed=false
 $at_check_filter
 echo stderr:; cat "$at_stderr"
 echo stdout:; cat "$at_stdout"
-at_fn_check_status 0 $at_status "$at_srcdir/frame.at:483"
+at_fn_check_status 0 $at_status "$at_srcdir/frame.at:485"
 $at_failed && at_fn_log_failure
 $at_traceon; }
 
   set +x
   $at_times_p && times >"$at_times_file"
-) 5>&1 2>&1 | eval $at_tee_pipe
+) 5>&1 2>&1 7>&- | eval $at_tee_pipe
 read at_status <"$at_status_file"
 #AT_STOP_29
 #AT_START_30
-# 30. frame.at:565: btp_frame_parse
-at_setup_line='frame.at:565'
-at_fn_banner 3
-at_desc="btp_frame_parse"
-at_desc_line=" 30: $at_desc                                "
-$at_quiet $as_echo_n "$at_desc_line"
+at_fn_group_banner 30 'frame.at:576' \
+  "btp_frame_parse" "                                " 3
 at_xfail=no
-echo "#                             -*- compilation -*-" >> "$at_group_log"
 (
-  $as_echo "30. frame.at:565: testing $at_desc ..."
+  $as_echo "30. $at_setup_line: testing $at_desc ..."
   $at_traceon
 
 cat >btp_frame_parse.c <<'_ATEOF'
@@ -4318,47 +4242,42 @@ int main(void)
 _ATEOF
 
 { set +x
-$as_echo "$at_srcdir/frame.at:565: \$LIBTOOL --mode=link \$CC \$CFLAGS \$LDFLAGS -o btp_frame_parse btp_frame_parse.c \$LIBS"
-at_fn_check_prepare_dynamic "$LIBTOOL --mode=link $CC $CFLAGS $LDFLAGS -o btp_frame_parse btp_frame_parse.c $LIBS" "frame.at:565"
+$as_echo "$at_srcdir/frame.at:576: \$LIBTOOL --mode=link \$CC \$CFLAGS \$LDFLAGS -o btp_frame_parse btp_frame_parse.c \$LIBS"
+at_fn_check_prepare_dynamic "$LIBTOOL --mode=link $CC $CFLAGS $LDFLAGS -o btp_frame_parse btp_frame_parse.c $LIBS" "frame.at:576"
 ( $at_check_trace; $LIBTOOL --mode=link $CC $CFLAGS $LDFLAGS -o btp_frame_parse btp_frame_parse.c $LIBS
 ) >>"$at_stdout" 2>>"$at_stderr"
 at_status=$? at_failed=false
 $at_check_filter
 echo stderr:; cat "$at_stderr"
 echo stdout:; cat "$at_stdout"
-at_fn_check_status 0 $at_status "$at_srcdir/frame.at:565"
+at_fn_check_status 0 $at_status "$at_srcdir/frame.at:576"
 $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/frame.at:565: ./btp_frame_parse"
-at_fn_check_prepare_trace "frame.at:565"
+$as_echo "$at_srcdir/frame.at:576: ./btp_frame_parse"
+at_fn_check_prepare_trace "frame.at:576"
 ( $at_check_trace; ./btp_frame_parse
 ) >>"$at_stdout" 2>>"$at_stderr"
 at_status=$? at_failed=false
 $at_check_filter
 echo stderr:; cat "$at_stderr"
 echo stdout:; cat "$at_stdout"
-at_fn_check_status 0 $at_status "$at_srcdir/frame.at:565"
+at_fn_check_status 0 $at_status "$at_srcdir/frame.at:576"
 $at_failed && at_fn_log_failure
 $at_traceon; }
 
   set +x
   $at_times_p && times >"$at_times_file"
-) 5>&1 2>&1 | eval $at_tee_pipe
+) 5>&1 2>&1 7>&- | eval $at_tee_pipe
 read at_status <"$at_status_file"
 #AT_STOP_30
 #AT_START_31
-# 31. thread.at:8: btp_thread_remove_frame
-at_setup_line='thread.at:8'
-at_fn_banner 4
-at_desc="btp_thread_remove_frame"
-at_desc_line=" 31: $at_desc                        "
-$at_quiet $as_echo_n "$at_desc_line"
+at_fn_group_banner 31 'thread.at:8' \
+  "btp_thread_remove_frame" "                        " 4
 at_xfail=no
-echo "#                             -*- compilation -*-" >> "$at_group_log"
 (
-  $as_echo "31. thread.at:8: testing $at_desc ..."
+  $as_echo "31. $at_setup_line: testing $at_desc ..."
   $at_traceon
 
 cat >btp_thread_remove_frame.c <<'_ATEOF'
@@ -4450,20 +4369,15 @@ $at_traceon; }
 
   set +x
   $at_times_p && times >"$at_times_file"
-) 5>&1 2>&1 | eval $at_tee_pipe
+) 5>&1 2>&1 7>&- | eval $at_tee_pipe
 read at_status <"$at_status_file"
 #AT_STOP_31
 #AT_START_32
-# 32. thread.at:72: btp_thread_remove_frames_above
-at_setup_line='thread.at:72'
-at_fn_banner 4
-at_desc="btp_thread_remove_frames_above"
-at_desc_line=" 32: $at_desc                 "
-$at_quiet $as_echo_n "$at_desc_line"
+at_fn_group_banner 32 'thread.at:72' \
+  "btp_thread_remove_frames_above" "                 " 4
 at_xfail=no
-echo "#                             -*- compilation -*-" >> "$at_group_log"
 (
-  $as_echo "32. thread.at:72: testing $at_desc ..."
+  $as_echo "32. $at_setup_line: testing $at_desc ..."
   $at_traceon
 
 cat >btp_thread_remove_frames_above.c <<'_ATEOF'
@@ -4556,20 +4470,15 @@ $at_traceon; }
 
   set +x
   $at_times_p && times >"$at_times_file"
-) 5>&1 2>&1 | eval $at_tee_pipe
+) 5>&1 2>&1 7>&- | eval $at_tee_pipe
 read at_status <"$at_status_file"
 #AT_STOP_32
 #AT_START_33
-# 33. thread.at:137: btp_thread_remove_frames_below_n
-at_setup_line='thread.at:137'
-at_fn_banner 4
-at_desc="btp_thread_remove_frames_below_n"
-at_desc_line=" 33: $at_desc               "
-$at_quiet $as_echo_n "$at_desc_line"
+at_fn_group_banner 33 'thread.at:137' \
+  "btp_thread_remove_frames_below_n" "               " 4
 at_xfail=no
-echo "#                             -*- compilation -*-" >> "$at_group_log"
 (
-  $as_echo "33. thread.at:137: testing $at_desc ..."
+  $as_echo "33. $at_setup_line: testing $at_desc ..."
   $at_traceon
 
 cat >btp_thread_remove_frames_below_n.c <<'_ATEOF'
@@ -4663,20 +4572,15 @@ $at_traceon; }
 
   set +x
   $at_times_p && times >"$at_times_file"
-) 5>&1 2>&1 | eval $at_tee_pipe
+) 5>&1 2>&1 7>&- | eval $at_tee_pipe
 read at_status <"$at_status_file"
 #AT_STOP_33
 #AT_START_34
-# 34. thread.at:204: btp_thread_parse
-at_setup_line='thread.at:204'
-at_fn_banner 4
-at_desc="btp_thread_parse"
-at_desc_line=" 34: $at_desc                               "
-$at_quiet $as_echo_n "$at_desc_line"
+at_fn_group_banner 34 'thread.at:204' \
+  "btp_thread_parse" "                               " 4
 at_xfail=no
-echo "#                             -*- compilation -*-" >> "$at_group_log"
 (
-  $as_echo "34. thread.at:204: testing $at_desc ..."
+  $as_echo "34. $at_setup_line: testing $at_desc ..."
   $at_traceon
 
 cat >btp_thread_parse.c <<'_ATEOF'
@@ -4801,20 +4705,15 @@ $at_traceon; }
 
   set +x
   $at_times_p && times >"$at_times_file"
-) 5>&1 2>&1 | eval $at_tee_pipe
+) 5>&1 2>&1 7>&- | eval $at_tee_pipe
 read at_status <"$at_status_file"
 #AT_STOP_34
 #AT_START_35
-# 35. thread.at:302: btp_thread_parse-locations
-at_setup_line='thread.at:302'
-at_fn_banner 4
-at_desc="btp_thread_parse-locations"
-at_desc_line=" 35: $at_desc                     "
-$at_quiet $as_echo_n "$at_desc_line"
+at_fn_group_banner 35 'thread.at:302' \
+  "btp_thread_parse-locations" "                     " 4
 at_xfail=no
-echo "#                             -*- compilation -*-" >> "$at_group_log"
 (
-  $as_echo "35. thread.at:302: testing $at_desc ..."
+  $as_echo "35. $at_setup_line: testing $at_desc ..."
   $at_traceon
 
 cat >btp_thread_parse-locations.c <<'_ATEOF'
@@ -4910,20 +4809,15 @@ $at_traceon; }
 
   set +x
   $at_times_p && times >"$at_times_file"
-) 5>&1 2>&1 | eval $at_tee_pipe
+) 5>&1 2>&1 7>&- | eval $at_tee_pipe
 read at_status <"$at_status_file"
 #AT_STOP_35
 #AT_START_36
-# 36. thread.at:371: btp_thread_skip_lwp
-at_setup_line='thread.at:371'
-at_fn_banner 4
-at_desc="btp_thread_skip_lwp"
-at_desc_line=" 36: $at_desc                            "
-$at_quiet $as_echo_n "$at_desc_line"
+at_fn_group_banner 36 'thread.at:371' \
+  "btp_thread_skip_lwp" "                            " 4
 at_xfail=no
-echo "#                             -*- compilation -*-" >> "$at_group_log"
 (
-  $as_echo "36. thread.at:371: testing $at_desc ..."
+  $as_echo "36. $at_setup_line: testing $at_desc ..."
   $at_traceon
 
 cat >btp_thread_skip_lwp.c <<'_ATEOF'
@@ -4989,20 +4883,15 @@ $at_traceon; }
 
   set +x
   $at_times_p && times >"$at_times_file"
-) 5>&1 2>&1 | eval $at_tee_pipe
+) 5>&1 2>&1 7>&- | eval $at_tee_pipe
 read at_status <"$at_status_file"
 #AT_STOP_36
 #AT_START_37
-# 37. backtrace.at:8: btp_backtrace_remove_threads_except_one
-at_setup_line='backtrace.at:8'
-at_fn_banner 5
-at_desc="btp_backtrace_remove_threads_except_one"
-at_desc_line=" 37: $at_desc        "
-$at_quiet $as_echo_n "$at_desc_line"
+at_fn_group_banner 37 'backtrace.at:8' \
+  "btp_backtrace_remove_threads_except_one" "        " 5
 at_xfail=no
-echo "#                             -*- compilation -*-" >> "$at_group_log"
 (
-  $as_echo "37. backtrace.at:8: testing $at_desc ..."
+  $as_echo "37. $at_setup_line: testing $at_desc ..."
   $at_traceon
 
 cat >btp_backtrace_remove_threads_except_one.c <<'_ATEOF'
@@ -5083,20 +4972,15 @@ $at_traceon; }
 
   set +x
   $at_times_p && times >"$at_times_file"
-) 5>&1 2>&1 | eval $at_tee_pipe
+) 5>&1 2>&1 7>&- | eval $at_tee_pipe
 read at_status <"$at_status_file"
 #AT_STOP_37
 #AT_START_38
-# 38. backtrace.at:61: btp_backtrace_find_crash_thread
-at_setup_line='backtrace.at:61'
-at_fn_banner 5
-at_desc="btp_backtrace_find_crash_thread"
-at_desc_line=" 38: $at_desc                "
-$at_quiet $as_echo_n "$at_desc_line"
+at_fn_group_banner 38 'backtrace.at:61' \
+  "btp_backtrace_find_crash_thread" "                " 5
 at_xfail=no
-echo "#                             -*- compilation -*-" >> "$at_group_log"
 (
-  $as_echo "38. backtrace.at:61: testing $at_desc ..."
+  $as_echo "38. $at_setup_line: testing $at_desc ..."
   $at_traceon
 
 cat >btp_backtrace_find_crash_thread.c <<'_ATEOF'
@@ -5156,20 +5040,15 @@ $at_traceon; }
 
   set +x
   $at_times_p && times >"$at_times_file"
-) 5>&1 2>&1 | eval $at_tee_pipe
+) 5>&1 2>&1 7>&- | eval $at_tee_pipe
 read at_status <"$at_status_file"
 #AT_STOP_38
 #AT_START_39
-# 39. backtrace.at:93: btp_backtrace_limit_frame_depth
-at_setup_line='backtrace.at:93'
-at_fn_banner 5
-at_desc="btp_backtrace_limit_frame_depth"
-at_desc_line=" 39: $at_desc                "
-$at_quiet $as_echo_n "$at_desc_line"
+at_fn_group_banner 39 'backtrace.at:93' \
+  "btp_backtrace_limit_frame_depth" "                " 5
 at_xfail=no
-echo "#                             -*- compilation -*-" >> "$at_group_log"
 (
-  $as_echo "39. backtrace.at:93: testing $at_desc ..."
+  $as_echo "39. $at_setup_line: testing $at_desc ..."
   $at_traceon
 
 cat >btp_backtrace_limit_frame_depth.c <<'_ATEOF'
@@ -5234,20 +5113,15 @@ $at_traceon; }
 
   set +x
   $at_times_p && times >"$at_times_file"
-) 5>&1 2>&1 | eval $at_tee_pipe
+) 5>&1 2>&1 7>&- | eval $at_tee_pipe
 read at_status <"$at_status_file"
 #AT_STOP_39
 #AT_START_40
-# 40. backtrace.at:130: btp_backtrace_quality_complex
-at_setup_line='backtrace.at:130'
-at_fn_banner 5
-at_desc="btp_backtrace_quality_complex"
-at_desc_line=" 40: $at_desc                  "
-$at_quiet $as_echo_n "$at_desc_line"
+at_fn_group_banner 40 'backtrace.at:130' \
+  "btp_backtrace_quality_complex" "                  " 5
 at_xfail=no
-echo "#                             -*- compilation -*-" >> "$at_group_log"
 (
-  $as_echo "40. backtrace.at:130: testing $at_desc ..."
+  $as_echo "40. $at_setup_line: testing $at_desc ..."
   $at_traceon
 
 cat >btp_backtrace_quality_complex.c <<'_ATEOF'
@@ -5302,20 +5176,15 @@ $at_traceon; }
 
   set +x
   $at_times_p && times >"$at_times_file"
-) 5>&1 2>&1 | eval $at_tee_pipe
+) 5>&1 2>&1 7>&- | eval $at_tee_pipe
 read at_status <"$at_status_file"
 #AT_STOP_40
 #AT_START_41
-# 41. normalize.at:10: btp_normalize_thread_removes_zeroes
-at_setup_line='normalize.at:10'
-at_fn_banner 6
-at_desc="btp_normalize_thread_removes_zeroes"
-at_desc_line=" 41: $at_desc            "
-$at_quiet $as_echo_n "$at_desc_line"
+at_fn_group_banner 41 'normalize.at:44' \
+  "btp_normalize_thread_removes_zeroes" "            " 6
 at_xfail=no
-echo "#                             -*- compilation -*-" >> "$at_group_log"
 (
-  $as_echo "41. normalize.at:10: testing $at_desc ..."
+  $as_echo "41. $at_setup_line: testing $at_desc ..."
   $at_traceon
 
 cat >btp_normalize_thread_removes_zeroes.c <<'_ATEOF'
@@ -5363,33 +5232,2413 @@ int main(void)
 _ATEOF
 
 { set +x
-$as_echo "$at_srcdir/normalize.at:10: \$LIBTOOL --mode=link \$CC \$CFLAGS \$LDFLAGS -o btp_normalize_thread_removes_zeroes btp_normalize_thread_removes_zeroes.c \$LIBS"
-at_fn_check_prepare_dynamic "$LIBTOOL --mode=link $CC $CFLAGS $LDFLAGS -o btp_normalize_thread_removes_zeroes btp_normalize_thread_removes_zeroes.c $LIBS" "normalize.at:10"
+$as_echo "$at_srcdir/normalize.at:44: \$LIBTOOL --mode=link \$CC \$CFLAGS \$LDFLAGS -o btp_normalize_thread_removes_zeroes btp_normalize_thread_removes_zeroes.c \$LIBS"
+at_fn_check_prepare_dynamic "$LIBTOOL --mode=link $CC $CFLAGS $LDFLAGS -o btp_normalize_thread_removes_zeroes btp_normalize_thread_removes_zeroes.c $LIBS" "normalize.at:44"
 ( $at_check_trace; $LIBTOOL --mode=link $CC $CFLAGS $LDFLAGS -o btp_normalize_thread_removes_zeroes btp_normalize_thread_removes_zeroes.c $LIBS
 ) >>"$at_stdout" 2>>"$at_stderr"
 at_status=$? at_failed=false
 $at_check_filter
 echo stderr:; cat "$at_stderr"
 echo stdout:; cat "$at_stdout"
-at_fn_check_status 0 $at_status "$at_srcdir/normalize.at:10"
+at_fn_check_status 0 $at_status "$at_srcdir/normalize.at:44"
 $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/normalize.at:10: ./btp_normalize_thread_removes_zeroes"
-at_fn_check_prepare_trace "normalize.at:10"
+$as_echo "$at_srcdir/normalize.at:44: ./btp_normalize_thread_removes_zeroes"
+at_fn_check_prepare_trace "normalize.at:44"
 ( $at_check_trace; ./btp_normalize_thread_removes_zeroes
 ) >>"$at_stdout" 2>>"$at_stderr"
 at_status=$? at_failed=false
 $at_check_filter
 echo stderr:; cat "$at_stderr"
 echo stdout:; cat "$at_stdout"
-at_fn_check_status 0 $at_status "$at_srcdir/normalize.at:10"
+at_fn_check_status 0 $at_status "$at_srcdir/normalize.at:44"
 $at_failed && at_fn_log_failure
 $at_traceon; }
 
   set +x
   $at_times_p && times >"$at_times_file"
-) 5>&1 2>&1 | eval $at_tee_pipe
+) 5>&1 2>&1 7>&- | eval $at_tee_pipe
 read at_status <"$at_status_file"
 #AT_STOP_41
+#AT_START_42
+at_fn_group_banner 42 'normalize.at:88' \
+  "btp_normalize_paired_unknown_function_names" "    " 6
+at_xfail=no
+(
+  $as_echo "42. $at_setup_line: testing $at_desc ..."
+  $at_traceon
+
+cat >btp_normalize_paired_unknown_function_names.c <<'_ATEOF'
+
+#include <stdarg.h>
+#include <lib/thread.h>
+#include <lib/frame.h>
+#include <lib/utils.h>
+#include <stdlib.h>
+#include <assert.h>
+#include <lib/metrics.h>
+#include <lib/normalize.h>
+
+struct btp_thread *create_thread(int count, ...)
+{
+  struct btp_thread *thread = btp_thread_new();
+  if (count == 0)
+     return thread;
+  int i;
+  va_list argp;
+  va_start(argp, count);
+
+  for (i=0; i < count; i++)
+  {
+    const char *fname = va_arg(argp, const char*);
+    struct btp_frame *frame = btp_frame_new();
+    frame->function_name = btp_strdup(fname);
+
+    if (thread->frames == NULL)thread->frames = frame;
+    else btp_frame_add_sibling(thread->frames, frame);
+  }
+
+  va_end(argp);
+  return thread;
+}
+
+
+int main()
+{
+  struct btp_thread *threads[6];
+  struct btp_frame *frame;
+  threads[0] = create_thread(5, "aa", "??", "??", "??", "??");
+  threads[1] = create_thread(5, "bb", "aa", "??", "??", "??");
+  threads[2] = create_thread(5, "aa", "??", "??", "??", "??");
+  threads[3] = create_thread(5, "bb", "aa", "??", "??", "??");
+
+  threads[4] = btp_thread_dup(threads[0], false);
+  threads[5] = btp_thread_dup(threads[1], false);
+  btp_normalize_paired_unknown_function_names(threads[4], threads[5]);
+  assert(!btp_thread_cmp(threads[2], threads[4]));
+  assert(!btp_thread_cmp(threads[3], threads[5]));
+
+  threads[4] = btp_thread_dup(threads[0], false);
+  threads[5] = btp_thread_dup(threads[1], false);
+  btp_normalize_paired_unknown_function_names(threads[5], threads[4]);
+  assert(!btp_thread_cmp(threads[2], threads[4]));
+  assert(!btp_thread_cmp(threads[3], threads[5]));
+
+  threads[0] = create_thread(5, "aa", "??", "cc", "cc", "??");
+  threads[1] = create_thread(5, "bb", "aa", "??", "cc", "??");
+  threads[2] = create_thread(5, "aa", "__unknown_function_0", "cc", "cc", "__unknown_function_1");
+  threads[3] = create_thread(5, "bb", "aa","__unknown_function_0", "cc", "__unknown_function_1");
+
+  threads[4] = btp_thread_dup(threads[0], false);
+  threads[5] = btp_thread_dup(threads[1], false);
+  btp_normalize_paired_unknown_function_names(threads[4], threads[5]);
+  assert(!btp_thread_cmp(threads[2], threads[4]));
+  assert(!btp_thread_cmp(threads[3], threads[5]));
+
+  threads[0] = create_thread(5, "aa", "??", "cc", "??", "dd");
+  threads[1] = create_thread(5, "bb", "??", "cc", "??", "dd");
+  threads[2] = create_thread(5, "aa", "??", "cc", "__unknown_function_0", "dd");
+  threads[3] = create_thread(5, "bb", "??", "cc", "__unknown_function_0", "dd");
+
+  threads[4] = btp_thread_dup(threads[0], false);
+  threads[5] = btp_thread_dup(threads[1], false);
+  btp_normalize_paired_unknown_function_names(threads[4], threads[5]);
+  assert(!btp_thread_cmp(threads[2], threads[4]));
+  assert(!btp_thread_cmp(threads[3], threads[5]));
+
+  threads[0] = create_thread(5, "aa", "cc", "??", "??", "??");
+  threads[1] = create_thread(5, "bb", "??", "??", "??", "??");
+  threads[2] = create_thread(5, "aa", "cc", "??", "??", "??");
+  threads[3] = create_thread(5, "bb", "??", "??", "??", "??");
+
+  threads[4] = btp_thread_dup(threads[0], false);
+  threads[5] = btp_thread_dup(threads[1], false);
+  btp_normalize_paired_unknown_function_names(threads[4], threads[5]);
+  assert(!btp_thread_cmp(threads[2], threads[4]));
+  assert(!btp_thread_cmp(threads[3], threads[5]));
+
+  threads[4] = btp_thread_dup(threads[0], false);
+  threads[5] = btp_thread_dup(threads[1], false);
+  btp_normalize_paired_unknown_function_names(threads[5], threads[4]);
+  assert(!btp_thread_cmp(threads[2], threads[4]));
+  assert(!btp_thread_cmp(threads[3], threads[5]));
+
+  return 0;
+}
+_ATEOF
+
+{ set +x
+$as_echo "$at_srcdir/normalize.at:88: \$LIBTOOL --mode=link \$CC \$CFLAGS \$LDFLAGS -o btp_normalize_paired_unknown_function_names btp_normalize_paired_unknown_function_names.c \$LIBS"
+at_fn_check_prepare_dynamic "$LIBTOOL --mode=link $CC $CFLAGS $LDFLAGS -o btp_normalize_paired_unknown_function_names btp_normalize_paired_unknown_function_names.c $LIBS" "normalize.at:88"
+( $at_check_trace; $LIBTOOL --mode=link $CC $CFLAGS $LDFLAGS -o btp_normalize_paired_unknown_function_names btp_normalize_paired_unknown_function_names.c $LIBS
+) >>"$at_stdout" 2>>"$at_stderr"
+at_status=$? at_failed=false
+$at_check_filter
+echo stderr:; cat "$at_stderr"
+echo stdout:; cat "$at_stdout"
+at_fn_check_status 0 $at_status "$at_srcdir/normalize.at:88"
+$at_failed && at_fn_log_failure
+$at_traceon; }
+
+{ set +x
+$as_echo "$at_srcdir/normalize.at:88: ./btp_normalize_paired_unknown_function_names"
+at_fn_check_prepare_trace "normalize.at:88"
+( $at_check_trace; ./btp_normalize_paired_unknown_function_names
+) >>"$at_stdout" 2>>"$at_stderr"
+at_status=$? at_failed=false
+$at_check_filter
+echo stderr:; cat "$at_stderr"
+echo stdout:; cat "$at_stdout"
+at_fn_check_status 0 $at_status "$at_srcdir/normalize.at:88"
+$at_failed && at_fn_log_failure
+$at_traceon; }
+
+  set +x
+  $at_times_p && times >"$at_times_file"
+) 5>&1 2>&1 7>&- | eval $at_tee_pipe
+read at_status <"$at_status_file"
+#AT_STOP_42
+#AT_START_43
+at_fn_group_banner 43 'metrics.at:43' \
+  "metrics_all_one_thread_empty" "                   " 7
+at_xfail=no
+(
+  $as_echo "43. $at_setup_line: testing $at_desc ..."
+  $at_traceon
+
+cat >metrics_all_one_thread_empty.c <<'_ATEOF'
+
+#include <stdarg.h>
+#include <lib/thread.h>
+#include <lib/frame.h>
+#include <lib/utils.h>
+#include <stdlib.h>
+#include <assert.h>
+#include <lib/metrics.h>
+#include <lib/normalize.h>
+
+struct btp_thread *create_thread(int count, ...)
+{
+  struct btp_thread *thread = btp_thread_new();
+  if (count == 0)
+     return thread;
+  int i;
+  va_list argp;
+  va_start(argp, count);
+
+  for (i=0; i < count; i++)
+  {
+    const char *fname = va_arg(argp, const char*);
+    struct btp_frame *frame = btp_frame_new();
+    frame->function_name = btp_strdup(fname);
+
+    if (thread->frames == NULL)thread->frames = frame;
+    else btp_frame_add_sibling(thread->frames, frame);
+  }
+
+  va_end(argp);
+  return thread;
+}
+
+bool is_dist_equal(float x, float y)
+{
+  float epsilon = 1e-6;
+  return x - epsilon <= y && x + epsilon >= y;
+}
+
+
+int main()
+{
+  struct btp_thread *thread1 = create_thread(0);
+
+  struct btp_thread *thread2 = create_thread(3, "??", "ds", "main");
+
+  btp_normalize_paired_unknown_function_names(thread1, thread2);
+
+  assert(is_dist_equal(0.0, btp_thread_jarowinkler_distance(thread1, thread2)));
+  assert(is_dist_equal(1.0, btp_thread_jaccard_distance(thread1, thread2)));
+  assert(3 == btp_thread_levenshtein_distance(thread1, thread2, false));
+  return 0;
+}
+_ATEOF
+
+{ set +x
+$as_echo "$at_srcdir/metrics.at:43: \$LIBTOOL --mode=link \$CC \$CFLAGS \$LDFLAGS -o metrics_all_one_thread_empty metrics_all_one_thread_empty.c \$LIBS"
+at_fn_check_prepare_dynamic "$LIBTOOL --mode=link $CC $CFLAGS $LDFLAGS -o metrics_all_one_thread_empty metrics_all_one_thread_empty.c $LIBS" "metrics.at:43"
+( $at_check_trace; $LIBTOOL --mode=link $CC $CFLAGS $LDFLAGS -o metrics_all_one_thread_empty metrics_all_one_thread_empty.c $LIBS
+) >>"$at_stdout" 2>>"$at_stderr"
+at_status=$? at_failed=false
+$at_check_filter
+echo stderr:; cat "$at_stderr"
+echo stdout:; cat "$at_stdout"
+at_fn_check_status 0 $at_status "$at_srcdir/metrics.at:43"
+$at_failed && at_fn_log_failure
+$at_traceon; }
+
+{ set +x
+$as_echo "$at_srcdir/metrics.at:43: ./metrics_all_one_thread_empty"
+at_fn_check_prepare_trace "metrics.at:43"
+( $at_check_trace; ./metrics_all_one_thread_empty
+) >>"$at_stdout" 2>>"$at_stderr"
+at_status=$? at_failed=false
+$at_check_filter
+echo stderr:; cat "$at_stderr"
+echo stdout:; cat "$at_stdout"
+at_fn_check_status 0 $at_status "$at_srcdir/metrics.at:43"
+$at_failed && at_fn_log_failure
+$at_traceon; }
+
+  set +x
+  $at_times_p && times >"$at_times_file"
+) 5>&1 2>&1 7>&- | eval $at_tee_pipe
+read at_status <"$at_status_file"
+#AT_STOP_43
+#AT_START_44
+at_fn_group_banner 44 'metrics.at:62' \
+  "metrics_all_both_threads_empty" "                 " 7
+at_xfail=no
+(
+  $as_echo "44. $at_setup_line: testing $at_desc ..."
+  $at_traceon
+
+cat >metrics_all_both_threads_empty.c <<'_ATEOF'
+
+#include <stdarg.h>
+#include <lib/thread.h>
+#include <lib/frame.h>
+#include <lib/utils.h>
+#include <stdlib.h>
+#include <assert.h>
+#include <lib/metrics.h>
+#include <lib/normalize.h>
+
+struct btp_thread *create_thread(int count, ...)
+{
+  struct btp_thread *thread = btp_thread_new();
+  if (count == 0)
+     return thread;
+  int i;
+  va_list argp;
+  va_start(argp, count);
+
+  for (i=0; i < count; i++)
+  {
+    const char *fname = va_arg(argp, const char*);
+    struct btp_frame *frame = btp_frame_new();
+    frame->function_name = btp_strdup(fname);
+
+    if (thread->frames == NULL)thread->frames = frame;
+    else btp_frame_add_sibling(thread->frames, frame);
+  }
+
+  va_end(argp);
+  return thread;
+}
+
+bool is_dist_equal(float x, float y)
+{
+  float epsilon = 1e-6;
+  return x - epsilon <= y && x + epsilon >= y;
+}
+
+
+int main()
+{
+  struct btp_thread *thread1 = create_thread(0);
+
+  struct btp_thread *thread2 = create_thread(0);
+
+  btp_normalize_paired_unknown_function_names(thread1, thread2);
+
+  assert(is_dist_equal(1.0, btp_thread_jarowinkler_distance(thread1, thread2)));
+  assert(is_dist_equal(0.0, btp_thread_jaccard_distance(thread1, thread2)));
+  assert(0 == btp_thread_levenshtein_distance(thread1, thread2, false));
+  return 0;
+}
+_ATEOF
+
+{ set +x
+$as_echo "$at_srcdir/metrics.at:62: \$LIBTOOL --mode=link \$CC \$CFLAGS \$LDFLAGS -o metrics_all_both_threads_empty metrics_all_both_threads_empty.c \$LIBS"
+at_fn_check_prepare_dynamic "$LIBTOOL --mode=link $CC $CFLAGS $LDFLAGS -o metrics_all_both_threads_empty metrics_all_both_threads_empty.c $LIBS" "metrics.at:62"
+( $at_check_trace; $LIBTOOL --mode=link $CC $CFLAGS $LDFLAGS -o metrics_all_both_threads_empty metrics_all_both_threads_empty.c $LIBS
+) >>"$at_stdout" 2>>"$at_stderr"
+at_status=$? at_failed=false
+$at_check_filter
+echo stderr:; cat "$at_stderr"
+echo stdout:; cat "$at_stdout"
+at_fn_check_status 0 $at_status "$at_srcdir/metrics.at:62"
+$at_failed && at_fn_log_failure
+$at_traceon; }
+
+{ set +x
+$as_echo "$at_srcdir/metrics.at:62: ./metrics_all_both_threads_empty"
+at_fn_check_prepare_trace "metrics.at:62"
+( $at_check_trace; ./metrics_all_both_threads_empty
+) >>"$at_stdout" 2>>"$at_stderr"
+at_status=$? at_failed=false
+$at_check_filter
+echo stderr:; cat "$at_stderr"
+echo stdout:; cat "$at_stdout"
+at_fn_check_status 0 $at_status "$at_srcdir/metrics.at:62"
+$at_failed && at_fn_log_failure
+$at_traceon; }
+
+  set +x
+  $at_times_p && times >"$at_times_file"
+) 5>&1 2>&1 7>&- | eval $at_tee_pipe
+read at_status <"$at_status_file"
+#AT_STOP_44
+#AT_START_45
+at_fn_group_banner 45 'metrics.at:81' \
+  "metrics_all_both_starting_??_levendistance3_a" "  " 7
+at_xfail=no
+(
+  $as_echo "45. $at_setup_line: testing $at_desc ..."
+  $at_traceon
+
+cat >metrics_all_both_starting_??_levendistance3_a.c <<'_ATEOF'
+
+#include <stdarg.h>
+#include <lib/thread.h>
+#include <lib/frame.h>
+#include <lib/utils.h>
+#include <stdlib.h>
+#include <assert.h>
+#include <lib/metrics.h>
+#include <lib/normalize.h>
+
+struct btp_thread *create_thread(int count, ...)
+{
+  struct btp_thread *thread = btp_thread_new();
+  if (count == 0)
+     return thread;
+  int i;
+  va_list argp;
+  va_start(argp, count);
+
+  for (i=0; i < count; i++)
+  {
+    const char *fname = va_arg(argp, const char*);
+    struct btp_frame *frame = btp_frame_new();
+    frame->function_name = btp_strdup(fname);
+
+    if (thread->frames == NULL)thread->frames = frame;
+    else btp_frame_add_sibling(thread->frames, frame);
+  }
+
+  va_end(argp);
+  return thread;
+}
+
+bool is_dist_equal(float x, float y)
+{
+  float epsilon = 1e-6;
+  return x - epsilon <= y && x + epsilon >= y;
+}
+
+
+int main()
+{
+  struct btp_thread *thread1 = create_thread(2, "??", "sd");
+
+  struct btp_thread *thread2 = create_thread(3, "??", "ds", "main");
+
+  btp_normalize_paired_unknown_function_names(thread1, thread2);
+
+  assert(is_dist_equal(0.0, btp_thread_jarowinkler_distance(thread1, thread2)));
+  assert(is_dist_equal(1.0, btp_thread_jaccard_distance(thread1, thread2)));
+  assert(3 == btp_thread_levenshtein_distance(thread1, thread2, false));
+  return 0;
+}
+_ATEOF
+
+{ set +x
+$as_echo "$at_srcdir/metrics.at:81: \$LIBTOOL --mode=link \$CC \$CFLAGS \$LDFLAGS -o metrics_all_both_starting_??_levendistance3_a metrics_all_both_starting_??_levendistance3_a.c \$LIBS"
+at_fn_check_prepare_dynamic "$LIBTOOL --mode=link $CC $CFLAGS $LDFLAGS -o metrics_all_both_starting_??_levendistance3_a metrics_all_both_starting_??_levendistance3_a.c $LIBS" "metrics.at:81"
+( $at_check_trace; $LIBTOOL --mode=link $CC $CFLAGS $LDFLAGS -o metrics_all_both_starting_??_levendistance3_a metrics_all_both_starting_??_levendistance3_a.c $LIBS
+) >>"$at_stdout" 2>>"$at_stderr"
+at_status=$? at_failed=false
+$at_check_filter
+echo stderr:; cat "$at_stderr"
+echo stdout:; cat "$at_stdout"
+at_fn_check_status 0 $at_status "$at_srcdir/metrics.at:81"
+$at_failed && at_fn_log_failure
+$at_traceon; }
+
+{ set +x
+$as_echo "$at_srcdir/metrics.at:81: ./metrics_all_both_starting_??_levendistance3_a"
+at_fn_check_prepare_trace "metrics.at:81"
+( $at_check_trace; ./metrics_all_both_starting_??_levendistance3_a
+) >>"$at_stdout" 2>>"$at_stderr"
+at_status=$? at_failed=false
+$at_check_filter
+echo stderr:; cat "$at_stderr"
+echo stdout:; cat "$at_stdout"
+at_fn_check_status 0 $at_status "$at_srcdir/metrics.at:81"
+$at_failed && at_fn_log_failure
+$at_traceon; }
+
+  set +x
+  $at_times_p && times >"$at_times_file"
+) 5>&1 2>&1 7>&- | eval $at_tee_pipe
+read at_status <"$at_status_file"
+#AT_STOP_45
+#AT_START_46
+at_fn_group_banner 46 'metrics.at:100' \
+  "metrics_all_both_starting_??_levendistance3_b" "  " 7
+at_xfail=no
+(
+  $as_echo "46. $at_setup_line: testing $at_desc ..."
+  $at_traceon
+
+cat >metrics_all_both_starting_??_levendistance3_b.c <<'_ATEOF'
+
+#include <stdarg.h>
+#include <lib/thread.h>
+#include <lib/frame.h>
+#include <lib/utils.h>
+#include <stdlib.h>
+#include <assert.h>
+#include <lib/metrics.h>
+#include <lib/normalize.h>
+
+struct btp_thread *create_thread(int count, ...)
+{
+  struct btp_thread *thread = btp_thread_new();
+  if (count == 0)
+     return thread;
+  int i;
+  va_list argp;
+  va_start(argp, count);
+
+  for (i=0; i < count; i++)
+  {
+    const char *fname = va_arg(argp, const char*);
+    struct btp_frame *frame = btp_frame_new();
+    frame->function_name = btp_strdup(fname);
+
+    if (thread->frames == NULL)thread->frames = frame;
+    else btp_frame_add_sibling(thread->frames, frame);
+  }
+
+  va_end(argp);
+  return thread;
+}
+
+bool is_dist_equal(float x, float y)
+{
+  float epsilon = 1e-6;
+  return x - epsilon <= y && x + epsilon >= y;
+}
+
+
+int main()
+{
+  struct btp_thread *thread1 = create_thread(1, "??");
+
+  struct btp_thread *thread2 = create_thread(3, "??", "ds", "main");
+
+  btp_normalize_paired_unknown_function_names(thread1, thread2);
+
+  assert(is_dist_equal(0.0, btp_thread_jarowinkler_distance(thread1, thread2)));
+  assert(is_dist_equal(1.0, btp_thread_jaccard_distance(thread1, thread2)));
+  assert(3 == btp_thread_levenshtein_distance(thread1, thread2, false));
+  return 0;
+}
+_ATEOF
+
+{ set +x
+$as_echo "$at_srcdir/metrics.at:100: \$LIBTOOL --mode=link \$CC \$CFLAGS \$LDFLAGS -o metrics_all_both_starting_??_levendistance3_b metrics_all_both_starting_??_levendistance3_b.c \$LIBS"
+at_fn_check_prepare_dynamic "$LIBTOOL --mode=link $CC $CFLAGS $LDFLAGS -o metrics_all_both_starting_??_levendistance3_b metrics_all_both_starting_??_levendistance3_b.c $LIBS" "metrics.at:100"
+( $at_check_trace; $LIBTOOL --mode=link $CC $CFLAGS $LDFLAGS -o metrics_all_both_starting_??_levendistance3_b metrics_all_both_starting_??_levendistance3_b.c $LIBS
+) >>"$at_stdout" 2>>"$at_stderr"
+at_status=$? at_failed=false
+$at_check_filter
+echo stderr:; cat "$at_stderr"
+echo stdout:; cat "$at_stdout"
+at_fn_check_status 0 $at_status "$at_srcdir/metrics.at:100"
+$at_failed && at_fn_log_failure
+$at_traceon; }
+
+{ set +x
+$as_echo "$at_srcdir/metrics.at:100: ./metrics_all_both_starting_??_levendistance3_b"
+at_fn_check_prepare_trace "metrics.at:100"
+( $at_check_trace; ./metrics_all_both_starting_??_levendistance3_b
+) >>"$at_stdout" 2>>"$at_stderr"
+at_status=$? at_failed=false
+$at_check_filter
+echo stderr:; cat "$at_stderr"
+echo stdout:; cat "$at_stdout"
+at_fn_check_status 0 $at_status "$at_srcdir/metrics.at:100"
+$at_failed && at_fn_log_failure
+$at_traceon; }
+
+  set +x
+  $at_times_p && times >"$at_times_file"
+) 5>&1 2>&1 7>&- | eval $at_tee_pipe
+read at_status <"$at_status_file"
+#AT_STOP_46
+#AT_START_47
+at_fn_group_banner 47 'metrics.at:119' \
+  "metrics_levenshtein_random_??_levendistance0_a" " " 7
+at_xfail=no
+(
+  $as_echo "47. $at_setup_line: testing $at_desc ..."
+  $at_traceon
+
+cat >metrics_levenshtein_random_??_levendistance0_a.c <<'_ATEOF'
+
+#include <stdarg.h>
+#include <lib/thread.h>
+#include <lib/frame.h>
+#include <lib/utils.h>
+#include <stdlib.h>
+#include <assert.h>
+#include <lib/metrics.h>
+#include <lib/normalize.h>
+
+struct btp_thread *create_thread(int count, ...)
+{
+  struct btp_thread *thread = btp_thread_new();
+  if (count == 0)
+     return thread;
+  int i;
+  va_list argp;
+  va_start(argp, count);
+
+  for (i=0; i < count; i++)
+  {
+    const char *fname = va_arg(argp, const char*);
+    struct btp_frame *frame = btp_frame_new();
+    frame->function_name = btp_strdup(fname);
+
+    if (thread->frames == NULL)thread->frames = frame;
+    else btp_frame_add_sibling(thread->frames, frame);
+  }
+
+  va_end(argp);
+  return thread;
+}
+
+bool is_dist_equal(float x, float y)
+{
+  float epsilon = 1e-6;
+  return x - epsilon <= y && x + epsilon >= y;
+}
+
+
+int main()
+{
+  struct btp_thread *thread1 = create_thread(3, "??", "ds", "main");
+
+  struct btp_thread *thread2 = create_thread(3, "??", "ds", "main");
+
+  btp_normalize_paired_unknown_function_names(thread1, thread2);
+
+  assert(0 == btp_thread_levenshtein_distance(thread1, thread2, false));
+  return 0;
+}
+_ATEOF
+
+{ set +x
+$as_echo "$at_srcdir/metrics.at:119: \$LIBTOOL --mode=link \$CC \$CFLAGS \$LDFLAGS -o metrics_levenshtein_random_??_levendistance0_a metrics_levenshtein_random_??_levendistance0_a.c \$LIBS"
+at_fn_check_prepare_dynamic "$LIBTOOL --mode=link $CC $CFLAGS $LDFLAGS -o metrics_levenshtein_random_??_levendistance0_a metrics_levenshtein_random_??_levendistance0_a.c $LIBS" "metrics.at:119"
+( $at_check_trace; $LIBTOOL --mode=link $CC $CFLAGS $LDFLAGS -o metrics_levenshtein_random_??_levendistance0_a metrics_levenshtein_random_??_levendistance0_a.c $LIBS
+) >>"$at_stdout" 2>>"$at_stderr"
+at_status=$? at_failed=false
+$at_check_filter
+echo stderr:; cat "$at_stderr"
+echo stdout:; cat "$at_stdout"
+at_fn_check_status 0 $at_status "$at_srcdir/metrics.at:119"
+$at_failed && at_fn_log_failure
+$at_traceon; }
+
+{ set +x
+$as_echo "$at_srcdir/metrics.at:119: ./metrics_levenshtein_random_??_levendistance0_a"
+at_fn_check_prepare_trace "metrics.at:119"
+( $at_check_trace; ./metrics_levenshtein_random_??_levendistance0_a
+) >>"$at_stdout" 2>>"$at_stderr"
+at_status=$? at_failed=false
+$at_check_filter
+echo stderr:; cat "$at_stderr"
+echo stdout:; cat "$at_stdout"
+at_fn_check_status 0 $at_status "$at_srcdir/metrics.at:119"
+$at_failed && at_fn_log_failure
+$at_traceon; }
+
+  set +x
+  $at_times_p && times >"$at_times_file"
+) 5>&1 2>&1 7>&- | eval $at_tee_pipe
+read at_status <"$at_status_file"
+#AT_STOP_47
+#AT_START_48
+at_fn_group_banner 48 'metrics.at:136' \
+  "metrics_levenshtein_random_??_levendistance0_b" " " 7
+at_xfail=no
+(
+  $as_echo "48. $at_setup_line: testing $at_desc ..."
+  $at_traceon
+
+cat >metrics_levenshtein_random_??_levendistance0_b.c <<'_ATEOF'
+
+#include <stdarg.h>
+#include <lib/thread.h>
+#include <lib/frame.h>
+#include <lib/utils.h>
+#include <stdlib.h>
+#include <assert.h>
+#include <lib/metrics.h>
+#include <lib/normalize.h>
+
+struct btp_thread *create_thread(int count, ...)
+{
+  struct btp_thread *thread = btp_thread_new();
+  if (count == 0)
+     return thread;
+  int i;
+  va_list argp;
+  va_start(argp, count);
+
+  for (i=0; i < count; i++)
+  {
+    const char *fname = va_arg(argp, const char*);
+    struct btp_frame *frame = btp_frame_new();
+    frame->function_name = btp_strdup(fname);
+
+    if (thread->frames == NULL)thread->frames = frame;
+    else btp_frame_add_sibling(thread->frames, frame);
+  }
+
+  va_end(argp);
+  return thread;
+}
+
+bool is_dist_equal(float x, float y)
+{
+  float epsilon = 1e-6;
+  return x - epsilon <= y && x + epsilon >= y;
+}
+
+
+int main()
+{
+  struct btp_thread *thread1 = create_thread(4, "dg", "??", "ds", "main");
+
+  struct btp_thread *thread2 = create_thread(4, "dg", "??", "ds", "main");
+
+  btp_normalize_paired_unknown_function_names(thread1, thread2);
+
+  assert(0 == btp_thread_levenshtein_distance(thread1, thread2, false));
+  return 0;
+}
+_ATEOF
+
+{ set +x
+$as_echo "$at_srcdir/metrics.at:136: \$LIBTOOL --mode=link \$CC \$CFLAGS \$LDFLAGS -o metrics_levenshtein_random_??_levendistance0_b metrics_levenshtein_random_??_levendistance0_b.c \$LIBS"
+at_fn_check_prepare_dynamic "$LIBTOOL --mode=link $CC $CFLAGS $LDFLAGS -o metrics_levenshtein_random_??_levendistance0_b metrics_levenshtein_random_??_levendistance0_b.c $LIBS" "metrics.at:136"
+( $at_check_trace; $LIBTOOL --mode=link $CC $CFLAGS $LDFLAGS -o metrics_levenshtein_random_??_levendistance0_b metrics_levenshtein_random_??_levendistance0_b.c $LIBS
+) >>"$at_stdout" 2>>"$at_stderr"
+at_status=$? at_failed=false
+$at_check_filter
+echo stderr:; cat "$at_stderr"
+echo stdout:; cat "$at_stdout"
+at_fn_check_status 0 $at_status "$at_srcdir/metrics.at:136"
+$at_failed && at_fn_log_failure
+$at_traceon; }
+
+{ set +x
+$as_echo "$at_srcdir/metrics.at:136: ./metrics_levenshtein_random_??_levendistance0_b"
+at_fn_check_prepare_trace "metrics.at:136"
+( $at_check_trace; ./metrics_levenshtein_random_??_levendistance0_b
+) >>"$at_stdout" 2>>"$at_stderr"
+at_status=$? at_failed=false
+$at_check_filter
+echo stderr:; cat "$at_stderr"
+echo stdout:; cat "$at_stdout"
+at_fn_check_status 0 $at_status "$at_srcdir/metrics.at:136"
+$at_failed && at_fn_log_failure
+$at_traceon; }
+
+  set +x
+  $at_times_p && times >"$at_times_file"
+) 5>&1 2>&1 7>&- | eval $at_tee_pipe
+read at_status <"$at_status_file"
+#AT_STOP_48
+#AT_START_49
+at_fn_group_banner 49 'metrics.at:153' \
+  "metrics_levenshtein_random_??_distance1" "        " 7
+at_xfail=no
+(
+  $as_echo "49. $at_setup_line: testing $at_desc ..."
+  $at_traceon
+
+cat >metrics_levenshtein_random_??_distance1.c <<'_ATEOF'
+
+#include <stdarg.h>
+#include <lib/thread.h>
+#include <lib/frame.h>
+#include <lib/utils.h>
+#include <stdlib.h>
+#include <assert.h>
+#include <lib/metrics.h>
+#include <lib/normalize.h>
+
+struct btp_thread *create_thread(int count, ...)
+{
+  struct btp_thread *thread = btp_thread_new();
+  if (count == 0)
+     return thread;
+  int i;
+  va_list argp;
+  va_start(argp, count);
+
+  for (i=0; i < count; i++)
+  {
+    const char *fname = va_arg(argp, const char*);
+    struct btp_frame *frame = btp_frame_new();
+    frame->function_name = btp_strdup(fname);
+
+    if (thread->frames == NULL)thread->frames = frame;
+    else btp_frame_add_sibling(thread->frames, frame);
+  }
+
+  va_end(argp);
+  return thread;
+}
+
+bool is_dist_equal(float x, float y)
+{
+  float epsilon = 1e-6;
+  return x - epsilon <= y && x + epsilon >= y;
+}
+
+
+int main()
+{
+  struct btp_thread *thread1 = create_thread(3, "dg", "??", "ds");
+
+  struct btp_thread *thread2 = create_thread(4, "dg", "??", "ds", "main");
+
+  btp_normalize_paired_unknown_function_names(thread1, thread2);
+
+  assert(1 == btp_thread_levenshtein_distance(thread1, thread2, false));
+  return 0;
+}
+_ATEOF
+
+{ set +x
+$as_echo "$at_srcdir/metrics.at:153: \$LIBTOOL --mode=link \$CC \$CFLAGS \$LDFLAGS -o metrics_levenshtein_random_??_distance1 metrics_levenshtein_random_??_distance1.c \$LIBS"
+at_fn_check_prepare_dynamic "$LIBTOOL --mode=link $CC $CFLAGS $LDFLAGS -o metrics_levenshtein_random_??_distance1 metrics_levenshtein_random_??_distance1.c $LIBS" "metrics.at:153"
+( $at_check_trace; $LIBTOOL --mode=link $CC $CFLAGS $LDFLAGS -o metrics_levenshtein_random_??_distance1 metrics_levenshtein_random_??_distance1.c $LIBS
+) >>"$at_stdout" 2>>"$at_stderr"
+at_status=$? at_failed=false
+$at_check_filter
+echo stderr:; cat "$at_stderr"
+echo stdout:; cat "$at_stdout"
+at_fn_check_status 0 $at_status "$at_srcdir/metrics.at:153"
+$at_failed && at_fn_log_failure
+$at_traceon; }
+
+{ set +x
+$as_echo "$at_srcdir/metrics.at:153: ./metrics_levenshtein_random_??_distance1"
+at_fn_check_prepare_trace "metrics.at:153"
+( $at_check_trace; ./metrics_levenshtein_random_??_distance1
+) >>"$at_stdout" 2>>"$at_stderr"
+at_status=$? at_failed=false
+$at_check_filter
+echo stderr:; cat "$at_stderr"
+echo stdout:; cat "$at_stdout"
+at_fn_check_status 0 $at_status "$at_srcdir/metrics.at:153"
+$at_failed && at_fn_log_failure
+$at_traceon; }
+
+  set +x
+  $at_times_p && times >"$at_times_file"
+) 5>&1 2>&1 7>&- | eval $at_tee_pipe
+read at_status <"$at_status_file"
+#AT_STOP_49
+#AT_START_50
+at_fn_group_banner 50 'metrics.at:170' \
+  "metrics_levenshtein_random_??_distance2_a" "      " 7
+at_xfail=no
+(
+  $as_echo "50. $at_setup_line: testing $at_desc ..."
+  $at_traceon
+
+cat >metrics_levenshtein_random_??_distance2_a.c <<'_ATEOF'
+
+#include <stdarg.h>
+#include <lib/thread.h>
+#include <lib/frame.h>
+#include <lib/utils.h>
+#include <stdlib.h>
+#include <assert.h>
+#include <lib/metrics.h>
+#include <lib/normalize.h>
+
+struct btp_thread *create_thread(int count, ...)
+{
+  struct btp_thread *thread = btp_thread_new();
+  if (count == 0)
+     return thread;
+  int i;
+  va_list argp;
+  va_start(argp, count);
+
+  for (i=0; i < count; i++)
+  {
+    const char *fname = va_arg(argp, const char*);
+    struct btp_frame *frame = btp_frame_new();
+    frame->function_name = btp_strdup(fname);
+
+    if (thread->frames == NULL)thread->frames = frame;
+    else btp_frame_add_sibling(thread->frames, frame);
+  }
+
+  va_end(argp);
+  return thread;
+}
+
+bool is_dist_equal(float x, float y)
+{
+  float epsilon = 1e-6;
+  return x - epsilon <= y && x + epsilon >= y;
+}
+
+
+int main()
+{
+  struct btp_thread *thread1 = create_thread(2, "dg", "??");
+
+  struct btp_thread *thread2 = create_thread(3, "dg", "??", "main");
+
+  btp_normalize_paired_unknown_function_names(thread1, thread2);
+
+  assert(2 == btp_thread_levenshtein_distance(thread1, thread2, false));
+  return 0;
+}
+_ATEOF
+
+{ set +x
+$as_echo "$at_srcdir/metrics.at:170: \$LIBTOOL --mode=link \$CC \$CFLAGS \$LDFLAGS -o metrics_levenshtein_random_??_distance2_a metrics_levenshtein_random_??_distance2_a.c \$LIBS"
+at_fn_check_prepare_dynamic "$LIBTOOL --mode=link $CC $CFLAGS $LDFLAGS -o metrics_levenshtein_random_??_distance2_a metrics_levenshtein_random_??_distance2_a.c $LIBS" "metrics.at:170"
+( $at_check_trace; $LIBTOOL --mode=link $CC $CFLAGS $LDFLAGS -o metrics_levenshtein_random_??_distance2_a metrics_levenshtein_random_??_distance2_a.c $LIBS
+) >>"$at_stdout" 2>>"$at_stderr"
+at_status=$? at_failed=false
+$at_check_filter
+echo stderr:; cat "$at_stderr"
+echo stdout:; cat "$at_stdout"
+at_fn_check_status 0 $at_status "$at_srcdir/metrics.at:170"
+$at_failed && at_fn_log_failure
+$at_traceon; }
+
+{ set +x
+$as_echo "$at_srcdir/metrics.at:170: ./metrics_levenshtein_random_??_distance2_a"
+at_fn_check_prepare_trace "metrics.at:170"
+( $at_check_trace; ./metrics_levenshtein_random_??_distance2_a
+) >>"$at_stdout" 2>>"$at_stderr"
+at_status=$? at_failed=false
+$at_check_filter
+echo stderr:; cat "$at_stderr"
+echo stdout:; cat "$at_stdout"
+at_fn_check_status 0 $at_status "$at_srcdir/metrics.at:170"
+$at_failed && at_fn_log_failure
+$at_traceon; }
+
+  set +x
+  $at_times_p && times >"$at_times_file"
+) 5>&1 2>&1 7>&- | eval $at_tee_pipe
+read at_status <"$at_status_file"
+#AT_STOP_50
+#AT_START_51
+at_fn_group_banner 51 'metrics.at:187' \
+  "metrics_levenshtein_random_??_distance2_b" "      " 7
+at_xfail=no
+(
+  $as_echo "51. $at_setup_line: testing $at_desc ..."
+  $at_traceon
+
+cat >metrics_levenshtein_random_??_distance2_b.c <<'_ATEOF'
+
+#include <stdarg.h>
+#include <lib/thread.h>
+#include <lib/frame.h>
+#include <lib/utils.h>
+#include <stdlib.h>
+#include <assert.h>
+#include <lib/metrics.h>
+#include <lib/normalize.h>
+
+struct btp_thread *create_thread(int count, ...)
+{
+  struct btp_thread *thread = btp_thread_new();
+  if (count == 0)
+     return thread;
+  int i;
+  va_list argp;
+  va_start(argp, count);
+
+  for (i=0; i < count; i++)
+  {
+    const char *fname = va_arg(argp, const char*);
+    struct btp_frame *frame = btp_frame_new();
+    frame->function_name = btp_strdup(fname);
+
+    if (thread->frames == NULL)thread->frames = frame;
+    else btp_frame_add_sibling(thread->frames, frame);
+  }
+
+  va_end(argp);
+  return thread;
+}
+
+bool is_dist_equal(float x, float y)
+{
+  float epsilon = 1e-6;
+  return x - epsilon <= y && x + epsilon >= y;
+}
+
+
+int main()
+{
+  struct btp_thread *thread1 = create_thread(3, "dg", "??", "??");
+
+  struct btp_thread *thread2 = create_thread(4, "dg", "??", "??", "main");
+
+  btp_normalize_paired_unknown_function_names(thread1, thread2);
+
+  assert(3 == btp_thread_levenshtein_distance(thread1, thread2, false));
+  return 0;
+}
+_ATEOF
+
+{ set +x
+$as_echo "$at_srcdir/metrics.at:187: \$LIBTOOL --mode=link \$CC \$CFLAGS \$LDFLAGS -o metrics_levenshtein_random_??_distance2_b metrics_levenshtein_random_??_distance2_b.c \$LIBS"
+at_fn_check_prepare_dynamic "$LIBTOOL --mode=link $CC $CFLAGS $LDFLAGS -o metrics_levenshtein_random_??_distance2_b metrics_levenshtein_random_??_distance2_b.c $LIBS" "metrics.at:187"
+( $at_check_trace; $LIBTOOL --mode=link $CC $CFLAGS $LDFLAGS -o metrics_levenshtein_random_??_distance2_b metrics_levenshtein_random_??_distance2_b.c $LIBS
+) >>"$at_stdout" 2>>"$at_stderr"
+at_status=$? at_failed=false
+$at_check_filter
+echo stderr:; cat "$at_stderr"
+echo stdout:; cat "$at_stdout"
+at_fn_check_status 0 $at_status "$at_srcdir/metrics.at:187"
+$at_failed && at_fn_log_failure
+$at_traceon; }
+
+{ set +x
+$as_echo "$at_srcdir/metrics.at:187: ./metrics_levenshtein_random_??_distance2_b"
+at_fn_check_prepare_trace "metrics.at:187"
+( $at_check_trace; ./metrics_levenshtein_random_??_distance2_b
+) >>"$at_stdout" 2>>"$at_stderr"
+at_status=$? at_failed=false
+$at_check_filter
+echo stderr:; cat "$at_stderr"
+echo stdout:; cat "$at_stdout"
+at_fn_check_status 0 $at_status "$at_srcdir/metrics.at:187"
+$at_failed && at_fn_log_failure
+$at_traceon; }
+
+  set +x
+  $at_times_p && times >"$at_times_file"
+) 5>&1 2>&1 7>&- | eval $at_tee_pipe
+read at_status <"$at_status_file"
+#AT_STOP_51
+#AT_START_52
+at_fn_group_banner 52 'metrics.at:204' \
+  "metrics_levenshtein_random_??_distance2_c" "      " 7
+at_xfail=no
+(
+  $as_echo "52. $at_setup_line: testing $at_desc ..."
+  $at_traceon
+
+cat >metrics_levenshtein_random_??_distance2_c.c <<'_ATEOF'
+
+#include <stdarg.h>
+#include <lib/thread.h>
+#include <lib/frame.h>
+#include <lib/utils.h>
+#include <stdlib.h>
+#include <assert.h>
+#include <lib/metrics.h>
+#include <lib/normalize.h>
+
+struct btp_thread *create_thread(int count, ...)
+{
+  struct btp_thread *thread = btp_thread_new();
+  if (count == 0)
+     return thread;
+  int i;
+  va_list argp;
+  va_start(argp, count);
+
+  for (i=0; i < count; i++)
+  {
+    const char *fname = va_arg(argp, const char*);
+    struct btp_frame *frame = btp_frame_new();
+    frame->function_name = btp_strdup(fname);
+
+    if (thread->frames == NULL)thread->frames = frame;
+    else btp_frame_add_sibling(thread->frames, frame);
+  }
+
+  va_end(argp);
+  return thread;
+}
+
+bool is_dist_equal(float x, float y)
+{
+  float epsilon = 1e-6;
+  return x - epsilon <= y && x + epsilon >= y;
+}
+
+
+int main()
+{
+  struct btp_thread *thread1 = create_thread(3, "??", "??", "main");
+
+  struct btp_thread *thread2 = create_thread(2, "??", "??");
+
+  btp_normalize_paired_unknown_function_names(thread1, thread2);
+
+  assert(3 == btp_thread_levenshtein_distance(thread1, thread2, false));
+  return 0;
+}
+_ATEOF
+
+{ set +x
+$as_echo "$at_srcdir/metrics.at:204: \$LIBTOOL --mode=link \$CC \$CFLAGS \$LDFLAGS -o metrics_levenshtein_random_??_distance2_c metrics_levenshtein_random_??_distance2_c.c \$LIBS"
+at_fn_check_prepare_dynamic "$LIBTOOL --mode=link $CC $CFLAGS $LDFLAGS -o metrics_levenshtein_random_??_distance2_c metrics_levenshtein_random_??_distance2_c.c $LIBS" "metrics.at:204"
+( $at_check_trace; $LIBTOOL --mode=link $CC $CFLAGS $LDFLAGS -o metrics_levenshtein_random_??_distance2_c metrics_levenshtein_random_??_distance2_c.c $LIBS
+) >>"$at_stdout" 2>>"$at_stderr"
+at_status=$? at_failed=false
+$at_check_filter
+echo stderr:; cat "$at_stderr"
+echo stdout:; cat "$at_stdout"
+at_fn_check_status 0 $at_status "$at_srcdir/metrics.at:204"
+$at_failed && at_fn_log_failure
+$at_traceon; }
+
+{ set +x
+$as_echo "$at_srcdir/metrics.at:204: ./metrics_levenshtein_random_??_distance2_c"
+at_fn_check_prepare_trace "metrics.at:204"
+( $at_check_trace; ./metrics_levenshtein_random_??_distance2_c
+) >>"$at_stdout" 2>>"$at_stderr"
+at_status=$? at_failed=false
+$at_check_filter
+echo stderr:; cat "$at_stderr"
+echo stdout:; cat "$at_stdout"
+at_fn_check_status 0 $at_status "$at_srcdir/metrics.at:204"
+$at_failed && at_fn_log_failure
+$at_traceon; }
+
+  set +x
+  $at_times_p && times >"$at_times_file"
+) 5>&1 2>&1 7>&- | eval $at_tee_pipe
+read at_status <"$at_status_file"
+#AT_STOP_52
+#AT_START_53
+at_fn_group_banner 53 'metrics.at:221' \
+  "metrics_levenshtein_trans_??_distance2_a" "       " 7
+at_xfail=no
+(
+  $as_echo "53. $at_setup_line: testing $at_desc ..."
+  $at_traceon
+
+cat >metrics_levenshtein_trans_??_distance2_a.c <<'_ATEOF'
+
+#include <stdarg.h>
+#include <lib/thread.h>
+#include <lib/frame.h>
+#include <lib/utils.h>
+#include <stdlib.h>
+#include <assert.h>
+#include <lib/metrics.h>
+#include <lib/normalize.h>
+
+struct btp_thread *create_thread(int count, ...)
+{
+  struct btp_thread *thread = btp_thread_new();
+  if (count == 0)
+     return thread;
+  int i;
+  va_list argp;
+  va_start(argp, count);
+
+  for (i=0; i < count; i++)
+  {
+    const char *fname = va_arg(argp, const char*);
+    struct btp_frame *frame = btp_frame_new();
+    frame->function_name = btp_strdup(fname);
+
+    if (thread->frames == NULL)thread->frames = frame;
+    else btp_frame_add_sibling(thread->frames, frame);
+  }
+
+  va_end(argp);
+  return thread;
+}
+
+bool is_dist_equal(float x, float y)
+{
+  float epsilon = 1e-6;
+  return x - epsilon <= y && x + epsilon >= y;
+}
+
+
+int main()
+{
+  struct btp_thread *thread1 = create_thread(5, "ale", "asd", "??", "agd", "dsa");
+
+  struct btp_thread *thread2 = create_thread(5, "ale", "huga", "asd", "??", "agd");
+
+  btp_normalize_paired_unknown_function_names(thread1, thread2);
+
+  assert(2 == btp_thread_levenshtein_distance(thread1, thread2, true));
+  return 0;
+}
+_ATEOF
+
+{ set +x
+$as_echo "$at_srcdir/metrics.at:221: \$LIBTOOL --mode=link \$CC \$CFLAGS \$LDFLAGS -o metrics_levenshtein_trans_??_distance2_a metrics_levenshtein_trans_??_distance2_a.c \$LIBS"
+at_fn_check_prepare_dynamic "$LIBTOOL --mode=link $CC $CFLAGS $LDFLAGS -o metrics_levenshtein_trans_??_distance2_a metrics_levenshtein_trans_??_distance2_a.c $LIBS" "metrics.at:221"
+( $at_check_trace; $LIBTOOL --mode=link $CC $CFLAGS $LDFLAGS -o metrics_levenshtein_trans_??_distance2_a metrics_levenshtein_trans_??_distance2_a.c $LIBS
+) >>"$at_stdout" 2>>"$at_stderr"
+at_status=$? at_failed=false
+$at_check_filter
+echo stderr:; cat "$at_stderr"
+echo stdout:; cat "$at_stdout"
+at_fn_check_status 0 $at_status "$at_srcdir/metrics.at:221"
+$at_failed && at_fn_log_failure
+$at_traceon; }
+
+{ set +x
+$as_echo "$at_srcdir/metrics.at:221: ./metrics_levenshtein_trans_??_distance2_a"
+at_fn_check_prepare_trace "metrics.at:221"
+( $at_check_trace; ./metrics_levenshtein_trans_??_distance2_a
+) >>"$at_stdout" 2>>"$at_stderr"
+at_status=$? at_failed=false
+$at_check_filter
+echo stderr:; cat "$at_stderr"
+echo stdout:; cat "$at_stdout"
+at_fn_check_status 0 $at_status "$at_srcdir/metrics.at:221"
+$at_failed && at_fn_log_failure
+$at_traceon; }
+
+  set +x
+  $at_times_p && times >"$at_times_file"
+) 5>&1 2>&1 7>&- | eval $at_tee_pipe
+read at_status <"$at_status_file"
+#AT_STOP_53
+#AT_START_54
+at_fn_group_banner 54 'metrics.at:238' \
+  "metrics_levenshtein_trans_??_distance2_b" "       " 7
+at_xfail=no
+(
+  $as_echo "54. $at_setup_line: testing $at_desc ..."
+  $at_traceon
+
+cat >metrics_levenshtein_trans_??_distance2_b.c <<'_ATEOF'
+
+#include <stdarg.h>
+#include <lib/thread.h>
+#include <lib/frame.h>
+#include <lib/utils.h>
+#include <stdlib.h>
+#include <assert.h>
+#include <lib/metrics.h>
+#include <lib/normalize.h>
+
+struct btp_thread *create_thread(int count, ...)
+{
+  struct btp_thread *thread = btp_thread_new();
+  if (count == 0)
+     return thread;
+  int i;
+  va_list argp;
+  va_start(argp, count);
+
+  for (i=0; i < count; i++)
+  {
+    const char *fname = va_arg(argp, const char*);
+    struct btp_frame *frame = btp_frame_new();
+    frame->function_name = btp_strdup(fname);
+
+    if (thread->frames == NULL)thread->frames = frame;
+    else btp_frame_add_sibling(thread->frames, frame);
+  }
+
+  va_end(argp);
+  return thread;
+}
+
+bool is_dist_equal(float x, float y)
+{
+  float epsilon = 1e-6;
+  return x - epsilon <= y && x + epsilon >= y;
+}
+
+
+int main()
+{
+  struct btp_thread *thread1 = create_thread(4, "asd", "??", "agd", "dsa");
+
+  struct btp_thread *thread2 = create_thread(4, "asd", "agd", "??", "dsa");
+
+  btp_normalize_paired_unknown_function_names(thread1, thread2);
+
+  assert(2 == btp_thread_levenshtein_distance(thread1, thread2, true));
+  return 0;
+}
+_ATEOF
+
+{ set +x
+$as_echo "$at_srcdir/metrics.at:238: \$LIBTOOL --mode=link \$CC \$CFLAGS \$LDFLAGS -o metrics_levenshtein_trans_??_distance2_b metrics_levenshtein_trans_??_distance2_b.c \$LIBS"
+at_fn_check_prepare_dynamic "$LIBTOOL --mode=link $CC $CFLAGS $LDFLAGS -o metrics_levenshtein_trans_??_distance2_b metrics_levenshtein_trans_??_distance2_b.c $LIBS" "metrics.at:238"
+( $at_check_trace; $LIBTOOL --mode=link $CC $CFLAGS $LDFLAGS -o metrics_levenshtein_trans_??_distance2_b metrics_levenshtein_trans_??_distance2_b.c $LIBS
+) >>"$at_stdout" 2>>"$at_stderr"
+at_status=$? at_failed=false
+$at_check_filter
+echo stderr:; cat "$at_stderr"
+echo stdout:; cat "$at_stdout"
+at_fn_check_status 0 $at_status "$at_srcdir/metrics.at:238"
+$at_failed && at_fn_log_failure
+$at_traceon; }
+
+{ set +x
+$as_echo "$at_srcdir/metrics.at:238: ./metrics_levenshtein_trans_??_distance2_b"
+at_fn_check_prepare_trace "metrics.at:238"
+( $at_check_trace; ./metrics_levenshtein_trans_??_distance2_b
+) >>"$at_stdout" 2>>"$at_stderr"
+at_status=$? at_failed=false
+$at_check_filter
+echo stderr:; cat "$at_stderr"
+echo stdout:; cat "$at_stdout"
+at_fn_check_status 0 $at_status "$at_srcdir/metrics.at:238"
+$at_failed && at_fn_log_failure
+$at_traceon; }
+
+  set +x
+  $at_times_p && times >"$at_times_file"
+) 5>&1 2>&1 7>&- | eval $at_tee_pipe
+read at_status <"$at_status_file"
+#AT_STOP_54
+#AT_START_55
+at_fn_group_banner 55 'metrics.at:255' \
+  "metrics_levenshtein_swap_trans_distance2_a" "     " 7
+at_xfail=no
+(
+  $as_echo "55. $at_setup_line: testing $at_desc ..."
+  $at_traceon
+
+cat >metrics_levenshtein_swap_trans_distance2_a.c <<'_ATEOF'
+
+#include <stdarg.h>
+#include <lib/thread.h>
+#include <lib/frame.h>
+#include <lib/utils.h>
+#include <stdlib.h>
+#include <assert.h>
+#include <lib/metrics.h>
+#include <lib/normalize.h>
+
+struct btp_thread *create_thread(int count, ...)
+{
+  struct btp_thread *thread = btp_thread_new();
+  if (count == 0)
+     return thread;
+  int i;
+  va_list argp;
+  va_start(argp, count);
+
+  for (i=0; i < count; i++)
+  {
+    const char *fname = va_arg(argp, const char*);
+    struct btp_frame *frame = btp_frame_new();
+    frame->function_name = btp_strdup(fname);
+
+    if (thread->frames == NULL)thread->frames = frame;
+    else btp_frame_add_sibling(thread->frames, frame);
+  }
+
+  va_end(argp);
+  return thread;
+}
+
+bool is_dist_equal(float x, float y)
+{
+  float epsilon = 1e-6;
+  return x - epsilon <= y && x + epsilon >= y;
+}
+
+
+int main()
+{
+  struct btp_thread *thread1 = create_thread(4, "a", "b", "c", "d");
+  struct btp_thread *thread2 = create_thread(4, "b", "a", "d", "c");
+
+  assert(2 == btp_thread_levenshtein_distance(thread1, thread2, true));
+  return 0;
+}
+_ATEOF
+
+{ set +x
+$as_echo "$at_srcdir/metrics.at:255: \$LIBTOOL --mode=link \$CC \$CFLAGS \$LDFLAGS -o metrics_levenshtein_swap_trans_distance2_a metrics_levenshtein_swap_trans_distance2_a.c \$LIBS"
+at_fn_check_prepare_dynamic "$LIBTOOL --mode=link $CC $CFLAGS $LDFLAGS -o metrics_levenshtein_swap_trans_distance2_a metrics_levenshtein_swap_trans_distance2_a.c $LIBS" "metrics.at:255"
+( $at_check_trace; $LIBTOOL --mode=link $CC $CFLAGS $LDFLAGS -o metrics_levenshtein_swap_trans_distance2_a metrics_levenshtein_swap_trans_distance2_a.c $LIBS
+) >>"$at_stdout" 2>>"$at_stderr"
+at_status=$? at_failed=false
+$at_check_filter
+echo stderr:; cat "$at_stderr"
+echo stdout:; cat "$at_stdout"
+at_fn_check_status 0 $at_status "$at_srcdir/metrics.at:255"
+$at_failed && at_fn_log_failure
+$at_traceon; }
+
+{ set +x
+$as_echo "$at_srcdir/metrics.at:255: ./metrics_levenshtein_swap_trans_distance2_a"
+at_fn_check_prepare_trace "metrics.at:255"
+( $at_check_trace; ./metrics_levenshtein_swap_trans_distance2_a
+) >>"$at_stdout" 2>>"$at_stderr"
+at_status=$? at_failed=false
+$at_check_filter
+echo stderr:; cat "$at_stderr"
+echo stdout:; cat "$at_stdout"
+at_fn_check_status 0 $at_status "$at_srcdir/metrics.at:255"
+$at_failed && at_fn_log_failure
+$at_traceon; }
+
+  set +x
+  $at_times_p && times >"$at_times_file"
+) 5>&1 2>&1 7>&- | eval $at_tee_pipe
+read at_status <"$at_status_file"
+#AT_STOP_55
+#AT_START_56
+at_fn_group_banner 56 'metrics.at:269' \
+  "metrics_levenshtein_swap_notrans_distance3_a" "   " 7
+at_xfail=no
+(
+  $as_echo "56. $at_setup_line: testing $at_desc ..."
+  $at_traceon
+
+cat >metrics_levenshtein_swap_notrans_distance3_a.c <<'_ATEOF'
+
+#include <stdarg.h>
+#include <lib/thread.h>
+#include <lib/frame.h>
+#include <lib/utils.h>
+#include <stdlib.h>
+#include <assert.h>
+#include <lib/metrics.h>
+#include <lib/normalize.h>
+
+struct btp_thread *create_thread(int count, ...)
+{
+  struct btp_thread *thread = btp_thread_new();
+  if (count == 0)
+     return thread;
+  int i;
+  va_list argp;
+  va_start(argp, count);
+
+  for (i=0; i < count; i++)
+  {
+    const char *fname = va_arg(argp, const char*);
+    struct btp_frame *frame = btp_frame_new();
+    frame->function_name = btp_strdup(fname);
+
+    if (thread->frames == NULL)thread->frames = frame;
+    else btp_frame_add_sibling(thread->frames, frame);
+  }
+
+  va_end(argp);
+  return thread;
+}
+
+bool is_dist_equal(float x, float y)
+{
+  float epsilon = 1e-6;
+  return x - epsilon <= y && x + epsilon >= y;
+}
+
+
+int main()
+{
+  struct btp_thread *thread1 = create_thread(4, "a", "b", "c", "d");
+  struct btp_thread *thread2 = create_thread(4, "b", "a", "d", "c");
+
+  assert(3 == btp_thread_levenshtein_distance(thread1, thread2, false));
+  return 0;
+}
+_ATEOF
+
+{ set +x
+$as_echo "$at_srcdir/metrics.at:269: \$LIBTOOL --mode=link \$CC \$CFLAGS \$LDFLAGS -o metrics_levenshtein_swap_notrans_distance3_a metrics_levenshtein_swap_notrans_distance3_a.c \$LIBS"
+at_fn_check_prepare_dynamic "$LIBTOOL --mode=link $CC $CFLAGS $LDFLAGS -o metrics_levenshtein_swap_notrans_distance3_a metrics_levenshtein_swap_notrans_distance3_a.c $LIBS" "metrics.at:269"
+( $at_check_trace; $LIBTOOL --mode=link $CC $CFLAGS $LDFLAGS -o metrics_levenshtein_swap_notrans_distance3_a metrics_levenshtein_swap_notrans_distance3_a.c $LIBS
+) >>"$at_stdout" 2>>"$at_stderr"
+at_status=$? at_failed=false
+$at_check_filter
+echo stderr:; cat "$at_stderr"
+echo stdout:; cat "$at_stdout"
+at_fn_check_status 0 $at_status "$at_srcdir/metrics.at:269"
+$at_failed && at_fn_log_failure
+$at_traceon; }
+
+{ set +x
+$as_echo "$at_srcdir/metrics.at:269: ./metrics_levenshtein_swap_notrans_distance3_a"
+at_fn_check_prepare_trace "metrics.at:269"
+( $at_check_trace; ./metrics_levenshtein_swap_notrans_distance3_a
+) >>"$at_stdout" 2>>"$at_stderr"
+at_status=$? at_failed=false
+$at_check_filter
+echo stderr:; cat "$at_stderr"
+echo stdout:; cat "$at_stdout"
+at_fn_check_status 0 $at_status "$at_srcdir/metrics.at:269"
+$at_failed && at_fn_log_failure
+$at_traceon; }
+
+  set +x
+  $at_times_p && times >"$at_times_file"
+) 5>&1 2>&1 7>&- | eval $at_tee_pipe
+read at_status <"$at_status_file"
+#AT_STOP_56
+#AT_START_57
+at_fn_group_banner 57 'metrics.at:283' \
+  "metrics_jaccard_random_??_distance0_a" "          " 7
+at_xfail=no
+(
+  $as_echo "57. $at_setup_line: testing $at_desc ..."
+  $at_traceon
+
+cat >metrics_jaccard_random_??_distance0_a.c <<'_ATEOF'
+
+#include <stdarg.h>
+#include <lib/thread.h>
+#include <lib/frame.h>
+#include <lib/utils.h>
+#include <stdlib.h>
+#include <assert.h>
+#include <lib/metrics.h>
+#include <lib/normalize.h>
+
+struct btp_thread *create_thread(int count, ...)
+{
+  struct btp_thread *thread = btp_thread_new();
+  if (count == 0)
+     return thread;
+  int i;
+  va_list argp;
+  va_start(argp, count);
+
+  for (i=0; i < count; i++)
+  {
+    const char *fname = va_arg(argp, const char*);
+    struct btp_frame *frame = btp_frame_new();
+    frame->function_name = btp_strdup(fname);
+
+    if (thread->frames == NULL)thread->frames = frame;
+    else btp_frame_add_sibling(thread->frames, frame);
+  }
+
+  va_end(argp);
+  return thread;
+}
+
+bool is_dist_equal(float x, float y)
+{
+  float epsilon = 1e-6;
+  return x - epsilon <= y && x + epsilon >= y;
+}
+
+
+int main()
+{
+  struct btp_thread *thread1 = create_thread(4, "asd", "agd", "agd", "??");
+
+  struct btp_thread *thread2 = create_thread(3, "asd", "agd", "??");
+
+  btp_normalize_paired_unknown_function_names(thread1, thread2);
+
+  assert(is_dist_equal(0.0, btp_thread_jaccard_distance(thread1, thread2)));
+  return 0;
+}
+_ATEOF
+
+{ set +x
+$as_echo "$at_srcdir/metrics.at:283: \$LIBTOOL --mode=link \$CC \$CFLAGS \$LDFLAGS -o metrics_jaccard_random_??_distance0_a metrics_jaccard_random_??_distance0_a.c \$LIBS"
+at_fn_check_prepare_dynamic "$LIBTOOL --mode=link $CC $CFLAGS $LDFLAGS -o metrics_jaccard_random_??_distance0_a metrics_jaccard_random_??_distance0_a.c $LIBS" "metrics.at:283"
+( $at_check_trace; $LIBTOOL --mode=link $CC $CFLAGS $LDFLAGS -o metrics_jaccard_random_??_distance0_a metrics_jaccard_random_??_distance0_a.c $LIBS
+) >>"$at_stdout" 2>>"$at_stderr"
+at_status=$? at_failed=false
+$at_check_filter
+echo stderr:; cat "$at_stderr"
+echo stdout:; cat "$at_stdout"
+at_fn_check_status 0 $at_status "$at_srcdir/metrics.at:283"
+$at_failed && at_fn_log_failure
+$at_traceon; }
+
+{ set +x
+$as_echo "$at_srcdir/metrics.at:283: ./metrics_jaccard_random_??_distance0_a"
+at_fn_check_prepare_trace "metrics.at:283"
+( $at_check_trace; ./metrics_jaccard_random_??_distance0_a
+) >>"$at_stdout" 2>>"$at_stderr"
+at_status=$? at_failed=false
+$at_check_filter
+echo stderr:; cat "$at_stderr"
+echo stdout:; cat "$at_stdout"
+at_fn_check_status 0 $at_status "$at_srcdir/metrics.at:283"
+$at_failed && at_fn_log_failure
+$at_traceon; }
+
+  set +x
+  $at_times_p && times >"$at_times_file"
+) 5>&1 2>&1 7>&- | eval $at_tee_pipe
+read at_status <"$at_status_file"
+#AT_STOP_57
+#AT_START_58
+at_fn_group_banner 58 'metrics.at:300' \
+  "metrics_jaccard_random_??_distance23_a" "         " 7
+at_xfail=no
+(
+  $as_echo "58. $at_setup_line: testing $at_desc ..."
+  $at_traceon
+
+cat >metrics_jaccard_random_??_distance23_a.c <<'_ATEOF'
+
+#include <stdarg.h>
+#include <lib/thread.h>
+#include <lib/frame.h>
+#include <lib/utils.h>
+#include <stdlib.h>
+#include <assert.h>
+#include <lib/metrics.h>
+#include <lib/normalize.h>
+
+struct btp_thread *create_thread(int count, ...)
+{
+  struct btp_thread *thread = btp_thread_new();
+  if (count == 0)
+     return thread;
+  int i;
+  va_list argp;
+  va_start(argp, count);
+
+  for (i=0; i < count; i++)
+  {
+    const char *fname = va_arg(argp, const char*);
+    struct btp_frame *frame = btp_frame_new();
+    frame->function_name = btp_strdup(fname);
+
+    if (thread->frames == NULL)thread->frames = frame;
+    else btp_frame_add_sibling(thread->frames, frame);
+  }
+
+  va_end(argp);
+  return thread;
+}
+
+bool is_dist_equal(float x, float y)
+{
+  float epsilon = 1e-6;
+  return x - epsilon <= y && x + epsilon >= y;
+}
+
+
+int main()
+{
+  struct btp_thread *thread1 = create_thread(3, "asd", "agd", "agd");
+
+  struct btp_thread *thread2 = create_thread(2, "sad", "agd");
+
+  assert(is_dist_equal(2/3.0, btp_thread_jaccard_distance(thread1, thread2)));
+  return 0;
+}
+_ATEOF
+
+{ set +x
+$as_echo "$at_srcdir/metrics.at:300: \$LIBTOOL --mode=link \$CC \$CFLAGS \$LDFLAGS -o metrics_jaccard_random_??_distance23_a metrics_jaccard_random_??_distance23_a.c \$LIBS"
+at_fn_check_prepare_dynamic "$LIBTOOL --mode=link $CC $CFLAGS $LDFLAGS -o metrics_jaccard_random_??_distance23_a metrics_jaccard_random_??_distance23_a.c $LIBS" "metrics.at:300"
+( $at_check_trace; $LIBTOOL --mode=link $CC $CFLAGS $LDFLAGS -o metrics_jaccard_random_??_distance23_a metrics_jaccard_random_??_distance23_a.c $LIBS
+) >>"$at_stdout" 2>>"$at_stderr"
+at_status=$? at_failed=false
+$at_check_filter
+echo stderr:; cat "$at_stderr"
+echo stdout:; cat "$at_stdout"
+at_fn_check_status 0 $at_status "$at_srcdir/metrics.at:300"
+$at_failed && at_fn_log_failure
+$at_traceon; }
+
+{ set +x
+$as_echo "$at_srcdir/metrics.at:300: ./metrics_jaccard_random_??_distance23_a"
+at_fn_check_prepare_trace "metrics.at:300"
+( $at_check_trace; ./metrics_jaccard_random_??_distance23_a
+) >>"$at_stdout" 2>>"$at_stderr"
+at_status=$? at_failed=false
+$at_check_filter
+echo stderr:; cat "$at_stderr"
+echo stdout:; cat "$at_stdout"
+at_fn_check_status 0 $at_status "$at_srcdir/metrics.at:300"
+$at_failed && at_fn_log_failure
+$at_traceon; }
+
+  set +x
+  $at_times_p && times >"$at_times_file"
+) 5>&1 2>&1 7>&- | eval $at_tee_pipe
+read at_status <"$at_status_file"
+#AT_STOP_58
+#AT_START_59
+at_fn_group_banner 59 'metrics.at:315' \
+  "metrics_jaccard_random_??_distance35" "           " 7
+at_xfail=no
+(
+  $as_echo "59. $at_setup_line: testing $at_desc ..."
+  $at_traceon
+
+cat >metrics_jaccard_random_??_distance35.c <<'_ATEOF'
+
+#include <stdarg.h>
+#include <lib/thread.h>
+#include <lib/frame.h>
+#include <lib/utils.h>
+#include <stdlib.h>
+#include <assert.h>
+#include <lib/metrics.h>
+#include <lib/normalize.h>
+
+struct btp_thread *create_thread(int count, ...)
+{
+  struct btp_thread *thread = btp_thread_new();
+  if (count == 0)
+     return thread;
+  int i;
+  va_list argp;
+  va_start(argp, count);
+
+  for (i=0; i < count; i++)
+  {
+    const char *fname = va_arg(argp, const char*);
+    struct btp_frame *frame = btp_frame_new();
+    frame->function_name = btp_strdup(fname);
+
+    if (thread->frames == NULL)thread->frames = frame;
+    else btp_frame_add_sibling(thread->frames, frame);
+  }
+
+  va_end(argp);
+  return thread;
+}
+
+bool is_dist_equal(float x, float y)
+{
+  float epsilon = 1e-6;
+  return x - epsilon <= y && x + epsilon >= y;
+}
+
+
+int main()
+{
+  struct btp_thread *thread1 = create_thread(5, "asd", "agd", "gad", "sad", "abc");
+
+  struct btp_thread *thread2 = create_thread(4, "sad", "sad", "sad", "gad");
+
+  assert(is_dist_equal(3/5.0, btp_thread_jaccard_distance(thread1, thread2)));
+  return 0;
+}
+_ATEOF
+
+{ set +x
+$as_echo "$at_srcdir/metrics.at:315: \$LIBTOOL --mode=link \$CC \$CFLAGS \$LDFLAGS -o metrics_jaccard_random_??_distance35 metrics_jaccard_random_??_distance35.c \$LIBS"
+at_fn_check_prepare_dynamic "$LIBTOOL --mode=link $CC $CFLAGS $LDFLAGS -o metrics_jaccard_random_??_distance35 metrics_jaccard_random_??_distance35.c $LIBS" "metrics.at:315"
+( $at_check_trace; $LIBTOOL --mode=link $CC $CFLAGS $LDFLAGS -o metrics_jaccard_random_??_distance35 metrics_jaccard_random_??_distance35.c $LIBS
+) >>"$at_stdout" 2>>"$at_stderr"
+at_status=$? at_failed=false
+$at_check_filter
+echo stderr:; cat "$at_stderr"
+echo stdout:; cat "$at_stdout"
+at_fn_check_status 0 $at_status "$at_srcdir/metrics.at:315"
+$at_failed && at_fn_log_failure
+$at_traceon; }
+
+{ set +x
+$as_echo "$at_srcdir/metrics.at:315: ./metrics_jaccard_random_??_distance35"
+at_fn_check_prepare_trace "metrics.at:315"
+( $at_check_trace; ./metrics_jaccard_random_??_distance35
+) >>"$at_stdout" 2>>"$at_stderr"
+at_status=$? at_failed=false
+$at_check_filter
+echo stderr:; cat "$at_stderr"
+echo stdout:; cat "$at_stdout"
+at_fn_check_status 0 $at_status "$at_srcdir/metrics.at:315"
+$at_failed && at_fn_log_failure
+$at_traceon; }
+
+  set +x
+  $at_times_p && times >"$at_times_file"
+) 5>&1 2>&1 7>&- | eval $at_tee_pipe
+read at_status <"$at_status_file"
+#AT_STOP_59
+#AT_START_60
+at_fn_group_banner 60 'metrics.at:330' \
+  "distances_basic_properties" "                     " 7
+at_xfail=no
+(
+  $as_echo "60. $at_setup_line: testing $at_desc ..."
+  $at_traceon
+
+cat >distances_basic_properties.c <<'_ATEOF'
+
+#include <stdarg.h>
+#include <lib/thread.h>
+#include <lib/frame.h>
+#include <lib/utils.h>
+#include <stdlib.h>
+#include <assert.h>
+#include <lib/metrics.h>
+#include <lib/normalize.h>
+
+struct btp_thread *create_thread(int count, ...)
+{
+  struct btp_thread *thread = btp_thread_new();
+  if (count == 0)
+     return thread;
+  int i;
+  va_list argp;
+  va_start(argp, count);
+
+  for (i=0; i < count; i++)
+  {
+    const char *fname = va_arg(argp, const char*);
+    struct btp_frame *frame = btp_frame_new();
+    frame->function_name = btp_strdup(fname);
+
+    if (thread->frames == NULL)thread->frames = frame;
+    else btp_frame_add_sibling(thread->frames, frame);
+  }
+
+  va_end(argp);
+  return thread;
+}
+
+bool is_dist_equal(float x, float y)
+{
+  float epsilon = 1e-6;
+  return x - epsilon <= y && x + epsilon >= y;
+}
+
+
+int main()
+{
+  int m = 50, n = 100, i, j;
+  struct btp_distances *distances = btp_distances_new(m, n);
+  float x;
+
+  for (i = 0; i < m; i++)
+    for (j = 0; j < n; j++)
+      btp_distances_set_distance(distances, i, j, i + j / 1000.0);
+
+  for (i = 0; i < m; i++)
+    for (j = 0; j < n; j++)
+    {
+      x = btp_distances_get_distance(distances, i, j);
+      if (i == j)
+         assert(x == 0.0);
+      else if (j < m && i < j)
+         assert(is_dist_equal(j + i / 1000.0, x));
+      else
+         assert(is_dist_equal(i + j / 1000.0, x));
+    }
+
+  return 0;
+}
+_ATEOF
+
+{ set +x
+$as_echo "$at_srcdir/metrics.at:330: \$LIBTOOL --mode=link \$CC \$CFLAGS \$LDFLAGS -o distances_basic_properties distances_basic_properties.c \$LIBS"
+at_fn_check_prepare_dynamic "$LIBTOOL --mode=link $CC $CFLAGS $LDFLAGS -o distances_basic_properties distances_basic_properties.c $LIBS" "metrics.at:330"
+( $at_check_trace; $LIBTOOL --mode=link $CC $CFLAGS $LDFLAGS -o distances_basic_properties distances_basic_properties.c $LIBS
+) >>"$at_stdout" 2>>"$at_stderr"
+at_status=$? at_failed=false
+$at_check_filter
+echo stderr:; cat "$at_stderr"
+echo stdout:; cat "$at_stdout"
+at_fn_check_status 0 $at_status "$at_srcdir/metrics.at:330"
+$at_failed && at_fn_log_failure
+$at_traceon; }
+
+{ set +x
+$as_echo "$at_srcdir/metrics.at:330: ./distances_basic_properties"
+at_fn_check_prepare_trace "metrics.at:330"
+( $at_check_trace; ./distances_basic_properties
+) >>"$at_stdout" 2>>"$at_stderr"
+at_status=$? at_failed=false
+$at_check_filter
+echo stderr:; cat "$at_stderr"
+echo stdout:; cat "$at_stdout"
+at_fn_check_status 0 $at_status "$at_srcdir/metrics.at:330"
+$at_failed && at_fn_log_failure
+$at_traceon; }
+
+  set +x
+  $at_times_p && times >"$at_times_file"
+) 5>&1 2>&1 7>&- | eval $at_tee_pipe
+read at_status <"$at_status_file"
+#AT_STOP_60
+#AT_START_61
+at_fn_group_banner 61 'metrics.at:360' \
+  "distances_threads_compare" "                      " 7
+at_xfail=no
+(
+  $as_echo "61. $at_setup_line: testing $at_desc ..."
+  $at_traceon
+
+cat >distances_threads_compare.c <<'_ATEOF'
+
+#include <stdarg.h>
+#include <lib/thread.h>
+#include <lib/frame.h>
+#include <lib/utils.h>
+#include <stdlib.h>
+#include <assert.h>
+#include <lib/metrics.h>
+#include <lib/normalize.h>
+
+struct btp_thread *create_thread(int count, ...)
+{
+  struct btp_thread *thread = btp_thread_new();
+  if (count == 0)
+     return thread;
+  int i;
+  va_list argp;
+  va_start(argp, count);
+
+  for (i=0; i < count; i++)
+  {
+    const char *fname = va_arg(argp, const char*);
+    struct btp_frame *frame = btp_frame_new();
+    frame->function_name = btp_strdup(fname);
+
+    if (thread->frames == NULL)thread->frames = frame;
+    else btp_frame_add_sibling(thread->frames, frame);
+  }
+
+  va_end(argp);
+  return thread;
+}
+
+bool is_dist_equal(float x, float y)
+{
+  float epsilon = 1e-6;
+  return x - epsilon <= y && x + epsilon >= y;
+}
+
+
+int main()
+{
+  struct btp_thread *threads[4];
+  threads[0] = create_thread(4, "asd", "agd", "das", "??");
+  threads[1] = create_thread(3, "asd", "agd", "??");
+  threads[2] = create_thread(3, "asd", "agd", "??");
+  threads[3] = create_thread(3, "dg", "??", "??");
+
+  struct btp_distances *distances = btp_threads_compare(threads, 3, 4, btp_thread_jaccard_distance);
+  assert(is_dist_equal(0.6, btp_distances_get_distance(distances, 0, 1)));
+  assert(is_dist_equal(0.6, btp_distances_get_distance(distances, 0, 2)));
+  assert(is_dist_equal(1.0, btp_distances_get_distance(distances, 0, 3)));
+  assert(is_dist_equal(0.0, btp_distances_get_distance(distances, 1, 2)));
+  assert(is_dist_equal(1.0, btp_distances_get_distance(distances, 1, 3)));
+  assert(is_dist_equal(1.0, btp_distances_get_distance(distances, 2, 3)));
+
+  return 0;
+}
+_ATEOF
+
+{ set +x
+$as_echo "$at_srcdir/metrics.at:360: \$LIBTOOL --mode=link \$CC \$CFLAGS \$LDFLAGS -o distances_threads_compare distances_threads_compare.c \$LIBS"
+at_fn_check_prepare_dynamic "$LIBTOOL --mode=link $CC $CFLAGS $LDFLAGS -o distances_threads_compare distances_threads_compare.c $LIBS" "metrics.at:360"
+( $at_check_trace; $LIBTOOL --mode=link $CC $CFLAGS $LDFLAGS -o distances_threads_compare distances_threads_compare.c $LIBS
+) >>"$at_stdout" 2>>"$at_stderr"
+at_status=$? at_failed=false
+$at_check_filter
+echo stderr:; cat "$at_stderr"
+echo stdout:; cat "$at_stdout"
+at_fn_check_status 0 $at_status "$at_srcdir/metrics.at:360"
+$at_failed && at_fn_log_failure
+$at_traceon; }
+
+{ set +x
+$as_echo "$at_srcdir/metrics.at:360: ./distances_threads_compare"
+at_fn_check_prepare_trace "metrics.at:360"
+( $at_check_trace; ./distances_threads_compare
+) >>"$at_stdout" 2>>"$at_stderr"
+at_status=$? at_failed=false
+$at_check_filter
+echo stderr:; cat "$at_stderr"
+echo stdout:; cat "$at_stdout"
+at_fn_check_status 0 $at_status "$at_srcdir/metrics.at:360"
+$at_failed && at_fn_log_failure
+$at_traceon; }
+
+  set +x
+  $at_times_p && times >"$at_times_file"
+) 5>&1 2>&1 7>&- | eval $at_tee_pipe
+read at_status <"$at_status_file"
+#AT_STOP_61
+#AT_START_62
+at_fn_group_banner 62 'cluster.at:3' \
+  "btp_distances_cluster_objects" "                  " 8
+at_xfail=no
+(
+  $as_echo "62. $at_setup_line: testing $at_desc ..."
+  $at_traceon
+
+cat >btp_distances_cluster_objects.c <<'_ATEOF'
+
+#include <lib/metrics.h>
+#include <lib/cluster.h>
+#include <assert.h>
+
+#include <stdio.h>
+
+bool is_dist_equal(float x, float y)
+{
+  float epsilon = 1e-6;
+  return x - epsilon <= y && x + epsilon >= y;
+}
+
+int main()
+{
+  struct btp_distances *distances;
+  struct btp_dendrogram *dendrogram;
+
+  distances = btp_distances_new(3, 4);
+  btp_distances_set_distance(distances, 0, 1, 1.0);
+  btp_distances_set_distance(distances, 0, 2, 0.5);
+  btp_distances_set_distance(distances, 0, 3, 0.0);
+  btp_distances_set_distance(distances, 1, 2, 0.1);
+  btp_distances_set_distance(distances, 1, 3, 0.3);
+  btp_distances_set_distance(distances, 2, 3, 0.7);
+
+  dendrogram = btp_distances_cluster_objects(distances);
+
+  assert(dendrogram->size == 4);
+
+  assert(dendrogram->order[0] == 0);
+  assert(dendrogram->order[1] == 3);
+  assert(dendrogram->order[2] == 1);
+  assert(dendrogram->order[3] == 2);
+
+  assert(is_dist_equal(dendrogram->merge_levels[0], 0.0));
+  assert(is_dist_equal(dendrogram->merge_levels[1], 0.625));
+  assert(is_dist_equal(dendrogram->merge_levels[2], 0.1));
+
+  distances = btp_distances_new(1, 6);
+  btp_distances_set_distance(distances, 0, 1, 1.0);
+  btp_distances_set_distance(distances, 0, 2, 0.5);
+  btp_distances_set_distance(distances, 0, 3, 0.3);
+  btp_distances_set_distance(distances, 0, 4, 0.0);
+  btp_distances_set_distance(distances, 0, 5, 0.9);
+
+  dendrogram = btp_distances_cluster_objects(distances);
+
+  assert(dendrogram->size == 6);
+
+  assert(dendrogram->order[0] == 0);
+  assert(dendrogram->order[1] == 4);
+  assert(dendrogram->order[2] == 3);
+  assert(dendrogram->order[3] == 2);
+  assert(dendrogram->order[4] == 5);
+  assert(dendrogram->order[5] == 1);
+
+  assert(is_dist_equal(dendrogram->merge_levels[0], 0.0));
+  assert(is_dist_equal(dendrogram->merge_levels[1], 0.3));
+  assert(is_dist_equal(dendrogram->merge_levels[2], 0.5));
+  assert(is_dist_equal(dendrogram->merge_levels[3], 0.9));
+  assert(is_dist_equal(dendrogram->merge_levels[4], 1.0));
+
+  return 0;
+}
+_ATEOF
+
+{ set +x
+$as_echo "$at_srcdir/cluster.at:3: \$LIBTOOL --mode=link \$CC \$CFLAGS \$LDFLAGS -o btp_distances_cluster_objects btp_distances_cluster_objects.c \$LIBS"
+at_fn_check_prepare_dynamic "$LIBTOOL --mode=link $CC $CFLAGS $LDFLAGS -o btp_distances_cluster_objects btp_distances_cluster_objects.c $LIBS" "cluster.at:3"
+( $at_check_trace; $LIBTOOL --mode=link $CC $CFLAGS $LDFLAGS -o btp_distances_cluster_objects btp_distances_cluster_objects.c $LIBS
+) >>"$at_stdout" 2>>"$at_stderr"
+at_status=$? at_failed=false
+$at_check_filter
+echo stderr:; cat "$at_stderr"
+echo stdout:; cat "$at_stdout"
+at_fn_check_status 0 $at_status "$at_srcdir/cluster.at:3"
+$at_failed && at_fn_log_failure
+$at_traceon; }
+
+{ set +x
+$as_echo "$at_srcdir/cluster.at:3: ./btp_distances_cluster_objects"
+at_fn_check_prepare_trace "cluster.at:3"
+( $at_check_trace; ./btp_distances_cluster_objects
+) >>"$at_stdout" 2>>"$at_stderr"
+at_status=$? at_failed=false
+$at_check_filter
+echo stderr:; cat "$at_stderr"
+echo stdout:; cat "$at_stdout"
+at_fn_check_status 0 $at_status "$at_srcdir/cluster.at:3"
+$at_failed && at_fn_log_failure
+$at_traceon; }
+
+  set +x
+  $at_times_p && times >"$at_times_file"
+) 5>&1 2>&1 7>&- | eval $at_tee_pipe
+read at_status <"$at_status_file"
+#AT_STOP_62
+#AT_START_63
+at_fn_group_banner 63 'cluster.at:71' \
+  "btp_dendrogram_cut" "                             " 8
+at_xfail=no
+(
+  $as_echo "63. $at_setup_line: testing $at_desc ..."
+  $at_traceon
+
+cat >btp_dendrogram_cut.c <<'_ATEOF'
+
+#include <lib/metrics.h>
+#include <lib/cluster.h>
+#include <assert.h>
+
+#include <stdio.h>
+
+int main()
+{
+  struct btp_dendrogram *dendrogram;
+  struct btp_cluster *cluster;
+
+  dendrogram = btp_dendrogram_new(6);
+
+  dendrogram->order[0] = 0;
+  dendrogram->order[1] = 3;
+  dendrogram->order[2] = 1;
+  dendrogram->order[3] = 2;
+  dendrogram->order[4] = 4;
+  dendrogram->order[5] = 5;
+
+  dendrogram->merge_levels[0] = 0.0;
+  dendrogram->merge_levels[1] = 0.6;
+  dendrogram->merge_levels[2] = 0.1;
+  dendrogram->merge_levels[3] = 0.5;
+  dendrogram->merge_levels[4] = 0.3;
+
+  cluster = btp_dendrogram_cut(dendrogram, 0.2, 1);
+
+  assert(cluster);
+
+  assert(cluster->size == 1);
+  assert(cluster->objects[0] == 5);
+  assert(cluster->next);
+  cluster = cluster->next;
+
+  assert(cluster->size == 1);
+  assert(cluster->objects[0] == 4);
+  assert(cluster->next);
+  cluster = cluster->next;
+
+  assert(cluster->size == 2);
+  assert(cluster->objects[0] == 1);
+  assert(cluster->objects[1] == 2);
+  assert(cluster->next);
+  cluster = cluster->next;
+
+  assert(cluster->size == 2);
+  assert(cluster->objects[0] == 0);
+  assert(cluster->objects[1] == 3);
+
+  assert(!cluster->next);
+
+  cluster = btp_dendrogram_cut(dendrogram, 0.5, 3);
+
+  assert(cluster);
+
+  assert(cluster->size == 4);
+  assert(cluster->objects[0] == 1);
+  assert(cluster->objects[1] == 2);
+  assert(cluster->objects[2] == 4);
+  assert(cluster->objects[3] == 5);
+
+  assert(!cluster->next);
+
+  return 0;
+}
+_ATEOF
+
+{ set +x
+$as_echo "$at_srcdir/cluster.at:71: \$LIBTOOL --mode=link \$CC \$CFLAGS \$LDFLAGS -o btp_dendrogram_cut btp_dendrogram_cut.c \$LIBS"
+at_fn_check_prepare_dynamic "$LIBTOOL --mode=link $CC $CFLAGS $LDFLAGS -o btp_dendrogram_cut btp_dendrogram_cut.c $LIBS" "cluster.at:71"
+( $at_check_trace; $LIBTOOL --mode=link $CC $CFLAGS $LDFLAGS -o btp_dendrogram_cut btp_dendrogram_cut.c $LIBS
+) >>"$at_stdout" 2>>"$at_stderr"
+at_status=$? at_failed=false
+$at_check_filter
+echo stderr:; cat "$at_stderr"
+echo stdout:; cat "$at_stdout"
+at_fn_check_status 0 $at_status "$at_srcdir/cluster.at:71"
+$at_failed && at_fn_log_failure
+$at_traceon; }
+
+{ set +x
+$as_echo "$at_srcdir/cluster.at:71: ./btp_dendrogram_cut"
+at_fn_check_prepare_trace "cluster.at:71"
+( $at_check_trace; ./btp_dendrogram_cut
+) >>"$at_stdout" 2>>"$at_stderr"
+at_status=$? at_failed=false
+$at_check_filter
+echo stderr:; cat "$at_stderr"
+echo stdout:; cat "$at_stdout"
+at_fn_check_status 0 $at_status "$at_srcdir/cluster.at:71"
+$at_failed && at_fn_log_failure
+$at_traceon; }
+
+  set +x
+  $at_times_p && times >"$at_times_file"
+) 5>&1 2>&1 7>&- | eval $at_tee_pipe
+read at_status <"$at_status_file"
+#AT_STOP_63
+#AT_START_64
+at_fn_group_banner 64 'sharedlib.at:8' \
+  "btp_sharedlib_parse" "                            " 9
+at_xfail=no
+(
+  $as_echo "64. $at_setup_line: testing $at_desc ..."
+  $at_traceon
+
+cat >btp_sharedlib_parse.c <<'_ATEOF'
+
+#include <lib/sharedlib.h>
+#include <lib/utils.h>
+#include <assert.h>
+#include <stdlib.h>
+
+int main(void)
+{
+  char *bt = btp_file_to_string("../../backtraces/621492.bt");
+  assert(bt);
+  struct btp_sharedlib *libs = btp_sharedlib_parse(bt);
+  assert(libs);
+  assert(libs->from == 0x0000003848c05640);
+  assert(libs->to == 0x0000003848c10e48);
+  assert(libs->symbols == SYMS_OK);
+  assert(strcmp("/lib64/libpthread.so.0", libs->soname) == 0);
+  btp_sharedlib_free(libs);
+  return 0;
+}
+_ATEOF
+
+{ set +x
+$as_echo "$at_srcdir/sharedlib.at:8: \$LIBTOOL --mode=link \$CC \$CFLAGS \$LDFLAGS -o btp_sharedlib_parse btp_sharedlib_parse.c \$LIBS"
+at_fn_check_prepare_dynamic "$LIBTOOL --mode=link $CC $CFLAGS $LDFLAGS -o btp_sharedlib_parse btp_sharedlib_parse.c $LIBS" "sharedlib.at:8"
+( $at_check_trace; $LIBTOOL --mode=link $CC $CFLAGS $LDFLAGS -o btp_sharedlib_parse btp_sharedlib_parse.c $LIBS
+) >>"$at_stdout" 2>>"$at_stderr"
+at_status=$? at_failed=false
+$at_check_filter
+echo stderr:; cat "$at_stderr"
+echo stdout:; cat "$at_stdout"
+at_fn_check_status 0 $at_status "$at_srcdir/sharedlib.at:8"
+$at_failed && at_fn_log_failure
+$at_traceon; }
+
+{ set +x
+$as_echo "$at_srcdir/sharedlib.at:8: ./btp_sharedlib_parse"
+at_fn_check_prepare_trace "sharedlib.at:8"
+( $at_check_trace; ./btp_sharedlib_parse
+) >>"$at_stdout" 2>>"$at_stderr"
+at_status=$? at_failed=false
+$at_check_filter
+echo stderr:; cat "$at_stderr"
+echo stdout:; cat "$at_stdout"
+at_fn_check_status 0 $at_status "$at_srcdir/sharedlib.at:8"
+$at_failed && at_fn_log_failure
+$at_traceon; }
+
+  set +x
+  $at_times_p && times >"$at_times_file"
+) 5>&1 2>&1 7>&- | eval $at_tee_pipe
+read at_status <"$at_status_file"
+#AT_STOP_64
+#AT_START_65
+at_fn_group_banner 65 'sharedlib.at:33' \
+  "btp_sharedlib_count" "                            " 9
+at_xfail=no
+(
+  $as_echo "65. $at_setup_line: testing $at_desc ..."
+  $at_traceon
+
+cat >btp_sharedlib_count.c <<'_ATEOF'
+
+#include <lib/sharedlib.h>
+#include <lib/utils.h>
+#include <assert.h>
+#include <stdlib.h>
+
+int main(void)
+{
+  char *bt = btp_file_to_string("../../backtraces/621492.bt");
+  assert(bt);
+  struct btp_sharedlib *libs = btp_sharedlib_parse(bt);
+  assert(libs);
+  assert(btp_sharedlib_count(libs) == 185);
+  btp_sharedlib_free(libs);
+  return 0;
+}
+_ATEOF
+
+{ set +x
+$as_echo "$at_srcdir/sharedlib.at:33: \$LIBTOOL --mode=link \$CC \$CFLAGS \$LDFLAGS -o btp_sharedlib_count btp_sharedlib_count.c \$LIBS"
+at_fn_check_prepare_dynamic "$LIBTOOL --mode=link $CC $CFLAGS $LDFLAGS -o btp_sharedlib_count btp_sharedlib_count.c $LIBS" "sharedlib.at:33"
+( $at_check_trace; $LIBTOOL --mode=link $CC $CFLAGS $LDFLAGS -o btp_sharedlib_count btp_sharedlib_count.c $LIBS
+) >>"$at_stdout" 2>>"$at_stderr"
+at_status=$? at_failed=false
+$at_check_filter
+echo stderr:; cat "$at_stderr"
+echo stdout:; cat "$at_stdout"
+at_fn_check_status 0 $at_status "$at_srcdir/sharedlib.at:33"
+$at_failed && at_fn_log_failure
+$at_traceon; }
+
+{ set +x
+$as_echo "$at_srcdir/sharedlib.at:33: ./btp_sharedlib_count"
+at_fn_check_prepare_trace "sharedlib.at:33"
+( $at_check_trace; ./btp_sharedlib_count
+) >>"$at_stdout" 2>>"$at_stderr"
+at_status=$? at_failed=false
+$at_check_filter
+echo stderr:; cat "$at_stderr"
+echo stdout:; cat "$at_stdout"
+at_fn_check_status 0 $at_status "$at_srcdir/sharedlib.at:33"
+$at_failed && at_fn_log_failure
+$at_traceon; }
+
+  set +x
+  $at_times_p && times >"$at_times_file"
+) 5>&1 2>&1 7>&- | eval $at_tee_pipe
+read at_status <"$at_status_file"
+#AT_STOP_65
+#AT_START_66
+at_fn_group_banner 66 'sharedlib.at:55' \
+  "btp_sharedlib_append" "                           " 9
+at_xfail=no
+(
+  $as_echo "66. $at_setup_line: testing $at_desc ..."
+  $at_traceon
+
+cat >btp_sharedlib_append.c <<'_ATEOF'
+
+#include <lib/sharedlib.h>
+#include <assert.h>
+#include <stdlib.h>
+
+int main(void)
+{
+  struct btp_sharedlib *lib1 = btp_sharedlib_new();
+  assert(lib1);
+  struct btp_sharedlib *lib2 = btp_sharedlib_new();
+  assert(lib2);
+  assert(btp_sharedlib_count(lib1) == 1);
+  assert(btp_sharedlib_count(lib2) == 1);
+  btp_sharedlib_append(lib1, lib2);
+  assert(btp_sharedlib_count(lib1) == 2);
+  assert(btp_sharedlib_count(lib2) == 1);
+  btp_sharedlib_free(lib1);
+  return 0;
+}
+_ATEOF
+
+{ set +x
+$as_echo "$at_srcdir/sharedlib.at:55: \$LIBTOOL --mode=link \$CC \$CFLAGS \$LDFLAGS -o btp_sharedlib_append btp_sharedlib_append.c \$LIBS"
+at_fn_check_prepare_dynamic "$LIBTOOL --mode=link $CC $CFLAGS $LDFLAGS -o btp_sharedlib_append btp_sharedlib_append.c $LIBS" "sharedlib.at:55"
+( $at_check_trace; $LIBTOOL --mode=link $CC $CFLAGS $LDFLAGS -o btp_sharedlib_append btp_sharedlib_append.c $LIBS
+) >>"$at_stdout" 2>>"$at_stderr"
+at_status=$? at_failed=false
+$at_check_filter
+echo stderr:; cat "$at_stderr"
+echo stdout:; cat "$at_stdout"
+at_fn_check_status 0 $at_status "$at_srcdir/sharedlib.at:55"
+$at_failed && at_fn_log_failure
+$at_traceon; }
+
+{ set +x
+$as_echo "$at_srcdir/sharedlib.at:55: ./btp_sharedlib_append"
+at_fn_check_prepare_trace "sharedlib.at:55"
+( $at_check_trace; ./btp_sharedlib_append
+) >>"$at_stdout" 2>>"$at_stderr"
+at_status=$? at_failed=false
+$at_check_filter
+echo stderr:; cat "$at_stderr"
+echo stdout:; cat "$at_stdout"
+at_fn_check_status 0 $at_status "$at_srcdir/sharedlib.at:55"
+$at_failed && at_fn_log_failure
+$at_traceon; }
+
+  set +x
+  $at_times_p && times >"$at_times_file"
+) 5>&1 2>&1 7>&- | eval $at_tee_pipe
+read at_status <"$at_status_file"
+#AT_STOP_66
+#AT_START_67
+at_fn_group_banner 67 'sharedlib.at:80' \
+  "btp_sharedlib_find_address" "                     " 9
+at_xfail=no
+(
+  $as_echo "67. $at_setup_line: testing $at_desc ..."
+  $at_traceon
+
+cat >btp_sharedlib_find_address.c <<'_ATEOF'
+
+#include <lib/sharedlib.h>
+#include <lib/utils.h>
+#include <assert.h>
+#include <stdlib.h>
+
+int main(void)
+{
+  char *bt = btp_file_to_string("../../backtraces/621492.bt");
+  assert(bt);
+  struct btp_sharedlib *libs = btp_sharedlib_parse(bt);
+  assert(libs);
+  assert(btp_sharedlib_find_address(libs, 0x0000003848c08000));
+  assert(btp_sharedlib_find_address(libs, 0x00007f907d3f0000));
+  assert(!btp_sharedlib_find_address(libs, 0));
+  assert(!btp_sharedlib_find_address(libs, 0xffff00000000ffff));
+  btp_sharedlib_free(libs);
+  return 0;
+}
+_ATEOF
+
+{ set +x
+$as_echo "$at_srcdir/sharedlib.at:80: \$LIBTOOL --mode=link \$CC \$CFLAGS \$LDFLAGS -o btp_sharedlib_find_address btp_sharedlib_find_address.c \$LIBS"
+at_fn_check_prepare_dynamic "$LIBTOOL --mode=link $CC $CFLAGS $LDFLAGS -o btp_sharedlib_find_address btp_sharedlib_find_address.c $LIBS" "sharedlib.at:80"
+( $at_check_trace; $LIBTOOL --mode=link $CC $CFLAGS $LDFLAGS -o btp_sharedlib_find_address btp_sharedlib_find_address.c $LIBS
+) >>"$at_stdout" 2>>"$at_stderr"
+at_status=$? at_failed=false
+$at_check_filter
+echo stderr:; cat "$at_stderr"
+echo stdout:; cat "$at_stdout"
+at_fn_check_status 0 $at_status "$at_srcdir/sharedlib.at:80"
+$at_failed && at_fn_log_failure
+$at_traceon; }
+
+{ set +x
+$as_echo "$at_srcdir/sharedlib.at:80: ./btp_sharedlib_find_address"
+at_fn_check_prepare_trace "sharedlib.at:80"
+( $at_check_trace; ./btp_sharedlib_find_address
+) >>"$at_stdout" 2>>"$at_stderr"
+at_status=$? at_failed=false
+$at_check_filter
+echo stderr:; cat "$at_stderr"
+echo stdout:; cat "$at_stdout"
+at_fn_check_status 0 $at_status "$at_srcdir/sharedlib.at:80"
+$at_failed && at_fn_log_failure
+$at_traceon; }
+
+  set +x
+  $at_times_p && times >"$at_times_file"
+) 5>&1 2>&1 7>&- | eval $at_tee_pipe
+read at_status <"$at_status_file"
+#AT_STOP_67

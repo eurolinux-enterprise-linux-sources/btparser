@@ -20,6 +20,7 @@
 #include "backtrace.h"
 #include "thread.h"
 #include "frame.h"
+#include "sharedlib.h"
 #include "utils.h"
 #include "strbuf.h"
 #include "location.h"
@@ -42,6 +43,7 @@ btp_backtrace_init(struct btp_backtrace *backtrace)
 {
     backtrace->threads = NULL;
     backtrace->crash = NULL;
+    backtrace->libs = NULL;
 }
 
 void
@@ -57,6 +59,13 @@ btp_backtrace_free(struct btp_backtrace *backtrace)
         btp_thread_free(rm);
     }
 
+    while (backtrace->libs)
+    {
+        struct btp_sharedlib *rm = backtrace->libs;
+        backtrace->libs = rm->next;
+        btp_sharedlib_free(rm);
+    }
+
     if (backtrace->crash)
         btp_frame_free(backtrace->crash);
 
@@ -70,9 +79,11 @@ btp_backtrace_dup(struct btp_backtrace *backtrace)
     memcpy(result, backtrace, sizeof(struct btp_backtrace));
 
     if (backtrace->crash)
-        backtrace->crash = btp_frame_dup(backtrace->crash, false);
+        result->crash = btp_frame_dup(backtrace->crash, false);
     if (backtrace->threads)
-        backtrace->threads = btp_thread_dup(backtrace->threads, true);
+        result->threads = btp_thread_dup(backtrace->threads, true);
+    if (backtrace->libs)
+        result->libs = btp_sharedlib_dup(backtrace->libs, true);
 
     return result;
 }
@@ -330,6 +341,7 @@ btp_backtrace_parse(const char **input,
 {
     const char *local_input = *input;
     struct btp_backtrace *imbacktrace = btp_backtrace_new(); /* im - intermediate */
+    imbacktrace->libs = btp_sharedlib_parse(*input);
 
     /* The header is mandatory, but it might contain no frame header,
      * in some broken backtraces. In that case, backtrace.crash value
@@ -442,4 +454,45 @@ btp_backtrace_parse_header(const char **input,
     /* Parse the frame header. */
     *frame = btp_frame_parse(input, location);
     return *frame;
+}
+
+void
+btp_backtrace_set_libnames(struct btp_backtrace *backtrace)
+{
+    struct btp_thread *thread;
+    struct btp_frame *frame;
+    struct btp_sharedlib *lib;
+
+    thread = backtrace->threads;
+
+    while (thread)
+    {
+        frame = thread->frames;
+        while (frame)
+        {
+            lib = btp_sharedlib_find_address(backtrace->libs, frame->address);
+            if (lib)
+            {
+                char *s1, *s2;
+
+                /* Strip directory and version after the .so suffix. */
+                s1 = strrchr(lib->soname, '/');
+                if (!s1)
+                    s1 = lib->soname;
+                else
+                    s1++;
+                s2 = strstr(s1, ".so");
+                if (!s2)
+                    s2 = s1 + strlen(s1);
+                else
+                    s2 += strlen(".so");
+
+                if (frame->library_name)
+                    free(frame->library_name);
+                frame->library_name = btp_strndup(s1, s2 - s1);
+            }
+            frame = frame->next;
+        }
+        thread = thread->next;
+    }
 }

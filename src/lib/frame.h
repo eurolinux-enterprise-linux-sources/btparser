@@ -68,9 +68,25 @@ struct btp_frame
     bool signal_handler_called;
     /**
      * The function address in the computer memory, or -1 when the
-     * address is unknown.
+     * address is unknown. Address is unknown when the frame
+     * represents inlined function.
      */
     uint64_t address;
+    /**
+     * A library name or NULL.
+     */
+    char *library_name;
+    /**
+     * Pointer to data that can be used to store further information
+     * about the frame. It is ignored by most of the btp_frame_* except
+     * btp_frame_free.
+     */
+    void *user_data;
+    /**
+     * Pointer to function used to free user_data when freeing the frame.
+     * No function is called if it is set to NULL.
+     */
+    void (*user_data_destructor)(void*);
     /**
      * A sibling frame residing below this one, or NULL if this is the
      * last frame in the parent thread.
@@ -215,6 +231,24 @@ int
 btp_frame_cmp(struct btp_frame *f1,
               struct btp_frame *f2,
               bool compare_number);
+
+/**
+ * Compares two frames, but only by their function and library names.
+ * Two unknown functions ("??") are assumed to be different and unknown
+ * library names to be the same.
+ * @param f1
+ * It must be non-NULL pointer. It's not modified by calling this
+ * function.
+ * @param f2
+ * It must be non-NULL pointer. It's not modified by calling this
+ * function.
+ * @returns
+ * Returns 0 if the frames are same.  Returns negative number if f1 is
+ * found to be 'less' than f2.  Returns positive number if f1 is found
+ * to be 'greater' than f2.
+ */
+int
+btp_frame_cmp_simple(struct btp_frame *frame1, struct btp_frame *frame2);
 
 /**
  * Puts the frame 'b' to the bottom of the stack 'a'. In other words,

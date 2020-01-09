@@ -1,19 +1,22 @@
+%{!?python_sitearch: %global python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib(1)")}
+
 Name: btparser
 Version: @PACKAGE_VERSION@
 Release: 1%{?dist}
-Summary: Backtrace parser and analyzer for backtraces produced by GDB
+Summary: Parser and analyzer for backtraces produced by GDB
 Group: Development/Libraries
 License: GPLv2+
 URL: http://fedorahosted.org/btparser
 Source0: https://fedorahosted.org/released/btparser/btparser-%{version}.tar.xz
+BuildRequires: python-devel
 
 %description
-btparser is a backtrace parser and analyzer, which works with
-backtraces produced by The GNU Project Debugger. It can parse a text
+Btparser is a backtrace parser and analyzer, which works with
+backtraces produced by the GNU Project Debugger. It can parse a text
 file with a backtrace to a tree of C structures, allowing to analyze
 the threads and frames of the backtrace and work with them.
 
-btparser also contains some backtrace manipulation and extraction
+Btparser also contains some backtrace manipulation and extraction
 routines:
 - it can find a frame in the crash-time backtrace where the program
   most likely crashed (a chance is that the function described in that
@@ -32,6 +35,14 @@ Requires: %{name}%{?_isa} = %{version}-%{release}
 
 %description devel
 Development libraries and headers for %{name}.
+
+%package python
+Summary: Python bindings for %{name}
+Group: Development/Libraries
+Requires: %{name}%{?_isa} = %{version}-%{release}
+
+%description python
+Python bindings for %{name}.
 
 %prep
 %setup -q
@@ -54,7 +65,7 @@ make check
 
 %files
 %doc README NEWS COPYING TODO ChangeLog
-%{_bindir}/%{name}
+%{_bindir}/btparser
 %{_mandir}/man1/%{name}.1.gz
 %{_libdir}/lib*.so.*
 
@@ -62,6 +73,10 @@ make check
 %{_includedir}/*
 %{_libdir}/lib*.so
 %{_libdir}/pkgconfig/*
+
+%files python
+%dir %{python_sitearch}/%{name}
+%{python_sitearch}/%{name}/*
 
 %changelog
 * Mon Aug 30 2010 Karel Klic <kklic@redhat.com> @PACKAGE_VERSION@-1

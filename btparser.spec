@@ -1,11 +1,15 @@
 Name: btparser
-Version: 0.13
-Release: 1%{?dist}
+Version: 0.16
+Release: 3%{?dist}
 Summary: Parser and analyzer for backtraces produced by GDB
 Group: Development/Libraries
 License: GPLv2+
 URL: http://fedorahosted.org/btparser
 Source0: https://fedorahosted.org/released/btparser/btparser-%{version}.tar.xz
+Patch0: btparser-rhbz#811147.patch
+BuildRequires: python-devel
+# Autoconf is required by btparser-rhbz#811147.patch
+BuildRequires: autoconf
 
 %description
 Btparser is a backtrace parser and analyzer, which works with
@@ -33,8 +37,17 @@ Requires: %{name}%{?_isa} = %{version}-%{release}
 %description devel
 Development libraries and headers for %{name}.
 
+%package python
+Summary: Python bindings for %{name}
+Group: Development/Libraries
+Requires: %{name}%{?_isa} = %{version}-%{release}
+
+%description python
+Python bindings for %{name}.
+
 %prep
 %setup -q
+%patch0 -p1 -b.811147
 
 %build
 %configure --disable-static
@@ -54,7 +67,7 @@ make check
 
 %files
 %doc README NEWS COPYING TODO ChangeLog
-%{_bindir}/%{name}
+%{_bindir}/btparser
 %{_mandir}/man1/%{name}.1.gz
 %{_libdir}/lib*.so.*
 
@@ -63,6 +76,18 @@ make check
 %{_libdir}/lib*.so
 %{_libdir}/pkgconfig/*
 
+%files python
+%dir %{python_sitearch}/%{name}
+%{python_sitearch}/%{name}/*
+
 %changelog
+* Mon May  7 2012 Karel Klíč <kklic@redhat.com> - 0.16-3
+- Report correct crash_function in the crash sumary
+  Resolves: rhbz#811147
+
+* Wed Feb  8 2012 Karel Klíč <kklic@redhat.com> - 0.16-1
+- New upstream release
+  Resolves: #768377
+
 * Mon May 16 2011 Karel Klíč <kklic@redhat.com> - 0.13-1
 - Initial packaging

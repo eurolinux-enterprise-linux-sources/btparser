@@ -1,4 +1,46 @@
+== btparser 0.16
+Released 2011-02-08.
+
+- The backtrace parser has been extended to handle frames representing
+  inlined frames.
+- Doubleparser command line tool got merged into btparser command line
+  tool.
+- Python bindings were significanly extended and several serious bugs
+  in reference counting and memory management were fixed.
+- The btp_normalize_paired_unknown_function_names function is now more
+  conservative in matching unknown frames.
+- The sharedlib parser was extended to handle less usual input and
+  btp_sharedlib_find_address now correctly handless unknown addresses
+  on input.
+- Thread normalization is now extended to remove a wide range of glib
+  and glibc function calls.
+- The format of optimized backtraces has been changed.
+
+== btparser 0.15
+Released 2011-01-04.
+
+- Added parser for 'info sharedlib' GDB command output (Michal Toman).
+- Added thread clustering (Miroslav Lichvár).
+- Python bindings (Michal Toman, Miroslav Lichvár).
+- Fixed some crashes and a bug in btp_backtrace_dup (Miroslav Lichvar,
+  Michal Toman).
+
+== btparser 0.14
+Released 2011-11-23.
+
+- Backtrace metrics were added to compute "distance" or "similarity"
+  between two backtraces. See functions thread_jarowinkler_distance,
+  thread_jaccard_index, thread_levenshtein_distance (Jan Šmejda).
+- Backtrace metrics allow using custom compare function (Martin
+  Milata).
+- Naming of unknown functions in the same context between two threads,
+  see new function btp_normalize_paired_unknown_function_names (Jan
+  Šmejda).
+- New user_data field and associated user_data_destructor function
+  pointer field in btp_frame structure (Martin Milata).
+
 == btparser 0.13
+Released 2011-05-16.
 
 - New upstream site fedorahosted.org/btparser.
 - Improved RPM packaging spec file.

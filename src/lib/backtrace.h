@@ -44,6 +44,11 @@ struct btp_backtrace
      * indistinguishable frames.
      */
     struct btp_frame *crash;
+
+    /**
+     * Shared libraries loaded at the moment of crash.
+     */
+    struct btp_sharedlib *libs;
 };
 
 /**
@@ -261,6 +266,13 @@ bool
 btp_backtrace_parse_header(const char **input,
                            struct btp_frame **frame,
                            struct btp_location *location);
+
+/**
+ * Set library names in all frames in the backtrace according to the
+ * the sharedlib data.
+ */
+void
+btp_backtrace_set_libnames(struct btp_backtrace *backtrace);
 
 #ifdef __cplusplus
 }

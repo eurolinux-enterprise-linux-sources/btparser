@@ -1,18 +1,24 @@
 pkginclude_HEADERS = \
 	backtrace.h \
+	cluster.h \
 	frame.h \
-	location.h
+	location.h \
+	metrics.h \
 	normalize.h \
+	sharedlib.h \
 	strbuf.h \
 	thread.h \
 	utils.h
 
 lib_LTLIBRARIES = libbtparser.la
 libbtparser_la_SOURCES = \
-	backtrace.h backtrace.c \
-	frame.h frame.c \
-	location.h location.c \
-	normalize.h normalize.c \
+	$(pkginclude_HEADERS) \
+	backtrace.c \
+	cluster.c \
+	frame.c \
+	location.c \
+	metrics.c \
+	normalize.c \
 	normalize_dbus.c \
 	normalize_gdk.c \
 	normalize_glib.c \
@@ -20,10 +26,12 @@ libbtparser_la_SOURCES = \
 	normalize_libstdcpp.c \
 	normalize_linux.c \
 	normalize_xorg.c \
-	strbuf.h strbuf.c \
-	thread.h thread.c \
-	utils.h utils.c
-libbtparser_la_CFLAGS = -Wall -Werror -D_GNU_SOURCE
+	sharedlib.c \
+	strbuf.c \
+	thread.c \
+	utils.c
+
+libbtparser_la_CFLAGS = -Wall -D_GNU_SOURCE
 libbtparser_la_LDFLAGS = -version-info 4:2:2
 
 # From http://www.seul.org/docs/autotut/
